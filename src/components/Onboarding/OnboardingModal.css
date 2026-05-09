@@ -15,7 +15,7 @@
 }
 
 .onboard-modal {
-  background: var(--bg-glass-strong);
+  background: rgba(12, 16, 21, 0.98);
   backdrop-filter: blur(var(--glass-blur-lg));
   -webkit-backdrop-filter: blur(var(--glass-blur-lg));
   border: 1px solid var(--border-default);
@@ -37,13 +37,10 @@
 }
 
 .onboard-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: var(--text-3xl);
-  font-weight: var(--font-bold);
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
   margin-bottom: var(--space-2);
 }
 
@@ -59,7 +56,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--hover-overlay);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .step-indicator {

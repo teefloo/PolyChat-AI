@@ -3,7 +3,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: var(--bg-overlay);
+  background: rgb(5 7 10 / 0.72);
   backdrop-filter: blur(var(--glass-blur-sm));
   -webkit-backdrop-filter: blur(var(--glass-blur-sm));
   z-index: var(--z-modal);
@@ -16,11 +16,11 @@
 
 .modal-container {
   position: relative;
-  background: var(--bg-glass-strong);
+  background: rgba(12, 16, 21, 0.98);
   backdrop-filter: blur(var(--glass-blur-lg));
   -webkit-backdrop-filter: blur(var(--glass-blur-lg));
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-2xl);
   width: 100%;
   max-width: 32rem; /* max-w-lg */
@@ -37,6 +37,7 @@
   justify-content: space-between;
   padding: var(--space-4) var(--space-6);
   border-bottom: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .modal-title {
@@ -52,7 +53,7 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   color: var(--text-secondary);
@@ -61,8 +62,8 @@
 }
 
 .modal-close-btn:hover {
-  background: rgb(239 68 68 / 0.15);
-  border-color: rgb(239 68 68 / 0.4);
+  background: rgb(239 68 68 / 0.1);
+  border-color: rgb(239 68 68 / 0.3);
   color: var(--color-error-500);
   transform: scale(1.05);
 }

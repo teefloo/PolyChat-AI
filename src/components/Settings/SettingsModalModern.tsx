@@ -77,7 +77,7 @@ const SettingsModalModern: React.FC<SettingsModalModernProps> = ({ isOpen, onClo
   const getModelDisplayName = (modelId: string) => modelId.split('/').pop() || modelId;
   const getModelProvider = (modelId: string) => {
     const parts = modelId.split('/');
-    return parts.length > 1 ? parts[0] : 'Unknown';
+    return parts.length > 1 ? parts[0] : 'Inconnu';
   };
 
   // Navigation clavier dans la liste
@@ -177,7 +177,7 @@ const SettingsModalModern: React.FC<SettingsModalModernProps> = ({ isOpen, onClo
                 <Search size={14} aria-hidden="true" />
                 <input
                   id="defaultModel"
-                  placeholder="Rechercher (nom / provider)..."
+                  placeholder="Rechercher (nom / fournisseur)..."
                   value={modelSearch}
                   onChange={(e) => {
                     setModelSearch(e.target.value);
@@ -209,7 +209,7 @@ const SettingsModalModern: React.FC<SettingsModalModernProps> = ({ isOpen, onClo
                   <div className="model-option-header" aria-hidden="true">
                     <span className="hdr-name">Modèle</span>
                     <span className="hdr-ctx">Ctx</span>
-                    <span className="hdr-price">Prix (In/Out)</span>
+                    <span className="hdr-price">Prix (Entrée/Sortie)</span>
                     <span className="hdr-sel">✔</span>
                   </div>
                 )}

@@ -296,7 +296,7 @@ export function getPriceCategory(model: OpenRouterModel): PriceRange {
  * Formate le nom d'un modèle pour l'affichage
  */
 export function formatModelName(modelId: string): string {
-  if (!modelId) return 'Unknown Model';
+  if (!modelId) return 'Modèle inconnu';
 
   // Séparer par '/' et prendre la partie après le provider
   const parts = modelId.split('/');

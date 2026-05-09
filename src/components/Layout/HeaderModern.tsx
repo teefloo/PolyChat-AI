@@ -51,7 +51,7 @@ const HeaderModern: React.FC<HeaderProps> = ({ onSettingsClick, onModelClick, on
             <h1 className="header-modern-title">PolyChat</h1>
             <div className="header-modern-subtitle">
               <Activity size={12} />
-              AI Assistant
+              Assistant IA
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@
 }
 
 .image-models-header h3 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--polychat-text-primary);
@@ -15,7 +15,7 @@
 }
 
 .image-models-header p {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.9rem;
   color: var(--polychat-text-muted);
   margin: 0;
@@ -23,22 +23,22 @@
 }
 
 .image-model-card {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-default);
   transition: all 0.3s ease;
 }
 
 .image-model-card:hover {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
-  border-color: rgba(168, 85, 247, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-strong);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .image-model-card.selected {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
-  border-color: var(--polychat-accent-primary);
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  background: rgba(127, 163, 198, 0.12);
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgb(127 163 198 / 0.1);
 }
 
 .image-model-card .model-emoji {

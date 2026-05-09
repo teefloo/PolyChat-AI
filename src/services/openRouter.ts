@@ -246,7 +246,7 @@ export const getImageModels = async (): Promise<
     for (const imageModel of imageModels) {
       result.push({
         id: imageModel.id,
-        name: imageModel.name || imageModel.id.split('/').pop() || 'Unknown Model',
+        name: imageModel.name || imageModel.id.split('/').pop() || 'Modèle inconnu',
         desc: "Génération d'images IA",
         emoji: '🎨',
       });
@@ -271,7 +271,7 @@ export const getImageModels = async (): Promise<
         if (existingModel) {
           result.push({
             id: existingModel.id,
-            name: existingModel.name || existingModel.id.split('/').pop() || 'Unknown Model',
+            name: existingModel.name || existingModel.id.split('/').pop() || 'Modèle inconnu',
             desc: "Génération d'images IA",
             emoji: '🎨',
           });
@@ -418,7 +418,7 @@ export const getTopWeeklyModels = async (): Promise<
       for (const model of additionalModels) {
         result.push({
           id: model.id,
-          name: model.name || model.id.split('/').pop() || 'Unknown Model',
+          name: model.name || model.id.split('/').pop() || 'Modèle inconnu',
           desc: 'Modèle populaire',
           emoji: '🤖',
         });

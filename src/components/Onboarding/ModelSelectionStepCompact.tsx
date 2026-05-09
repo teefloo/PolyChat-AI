@@ -27,7 +27,7 @@ const ModelSelectionStep: React.FC<ModelSelectionStepProps> = ({ onNext }) => {
         setModels([
           {
             id: 'openrouter/free',
-            name: 'Free Models',
+            name: 'Modèles gratuits',
             desc: 'Accès gratuit aux modèles IA',
             emoji: '🎁',
             isFree: true,
@@ -35,7 +35,7 @@ const ModelSelectionStep: React.FC<ModelSelectionStepProps> = ({ onNext }) => {
           {
             id: 'minimax/minimax-m2.5-20260211',
             name: 'Minimax M2.5',
-            desc: 'Top trending #1 - Nouveau',
+            desc: 'Tendance n°1 - Nouveau',
             emoji: '🚀',
           },
           {

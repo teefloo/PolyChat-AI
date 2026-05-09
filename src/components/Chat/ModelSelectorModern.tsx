@@ -20,7 +20,7 @@ const ModelSelectorModern: React.FC<{ compact?: boolean }> = ({ compact = true }
 
   const getModelProvider = (modelId: string) => {
     const parts = modelId.split('/');
-    return parts.length > 1 ? parts[0] : 'Unknown';
+    return parts.length > 1 ? parts[0] : 'Inconnu';
   };
 
   // Filtrage des modèles disponibles pour ne pas inclure ceux déjà sélectionnés

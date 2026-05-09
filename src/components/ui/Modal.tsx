@@ -91,12 +91,13 @@ const Modal: React.FC<ModalProps> = ({
                   style={{
                     width: '40px',
                     height: '40px',
-                    background: 'var(--accent-gradient)',
+                    background: 'rgba(127, 163, 198, 0.12)',
+                    border: '1px solid var(--border-default)',
                     borderRadius: 'var(--radius-xl)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'white',
+                    color: 'var(--text-primary)',
                   }}
                 >
                   {icon}

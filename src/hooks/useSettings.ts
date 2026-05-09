@@ -6,7 +6,7 @@ const DEFAULT_SETTINGS: Settings = {
   apiKey: '',
   selectedModel: '', // Aucun modèle par défaut - l'utilisateur choisit
   theme: 'dark', // Thème sombre par défaut pour le design moderne
-  accent: 'violet',
+  accent: 'blue',
   systemPrompt: '', // Instruction système vide par défaut
   tone: 'neutre',
   notificationsEnabled: true,

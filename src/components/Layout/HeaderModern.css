@@ -36,23 +36,23 @@
 /* Logo Button */
 .header-modern-logo-btn {
   position: relative;
-  width: 44px;
-  height: 44px;
-  background: var(--accent-gradient);
-  border: none;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-xl);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: var(--transition-all);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
 .header-modern-logo-btn:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-lg), var(--shadow-glow-sm);
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
 }
 
 .header-modern-logo-btn:active {
@@ -110,7 +110,7 @@
   transition: opacity var(--duration-normal) var(--ease-out);
   z-index: 3;
   color: white;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-lg);
 }
 
@@ -121,43 +121,44 @@
 
 /* Static Logo (non-clickable) */
 .header-modern-logo {
-  width: 44px;
-  height: 44px;
-  background: var(--accent-gradient);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-xl);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   transition: var(--transition-transform);
 }
 
 .header-modern-logo:hover {
-  transform: scale(1.05);
+  transform: translateY(-1px);
 }
 
 /* Title & Subtitle */
 .header-modern-title {
-  font-size: var(--text-xl);
-  font-weight: var(--font-bold);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
   margin: 0;
   letter-spacing: var(--tracking-tight);
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .header-modern-subtitle {
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
-  color: var(--accent-primary);
+  color: var(--text-muted);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 /* Middle Section - Model Indicator */
@@ -181,7 +182,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1-5) var(--space-3);
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
@@ -192,10 +193,9 @@
 }
 
 .header-modern-model-indicator:hover {
-  background: var(--hover-overlay);
-  border-color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-strong);
   color: var(--text-primary);
-  transform: translateY(-1px);
 }
 
 .header-modern-model-indicator svg {
@@ -247,7 +247,7 @@
 }
 
 .header-modern-settings-btn:hover svg {
-  transform: rotate(90deg);
+  transform: rotate(12deg);
 }
 
 .header-modern-settings-btn svg {
@@ -263,8 +263,8 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: var(--accent-gradient);
-  opacity: 0.3;
+  background: linear-gradient(90deg, transparent, var(--border-default), transparent);
+  opacity: 1;
 }
 
 /* Responsive */
@@ -275,8 +275,8 @@
 
   .header-modern-logo-btn,
   .header-modern-logo {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
 
   .header-modern-title {
@@ -299,8 +299,8 @@
 
   .header-modern-logo-btn,
   .header-modern-logo {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
   }
 
   .header-modern-title {

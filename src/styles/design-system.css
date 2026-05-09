@@ -6,7 +6,7 @@
 /* ==========================================================================
    1. FONTS & IMPORTS
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* ==========================================================================
    2. CSS CUSTOM PROPERTIES (Design Tokens)
@@ -30,17 +30,17 @@
 
   /* Neutral Colors */
   --color-neutral-0: #ffffff;
-  --color-neutral-50: #fafafa;
-  --color-neutral-100: #f4f4f5;
-  --color-neutral-200: #e4e4e7;
-  --color-neutral-300: #d4d4d8;
-  --color-neutral-400: #a1a1aa;
-  --color-neutral-500: #71717a;
-  --color-neutral-600: #52525b;
-  --color-neutral-700: #3f3f46;
-  --color-neutral-800: #27272a;
-  --color-neutral-900: #18181b;
-  --color-neutral-950: #09090b;
+  --color-neutral-50: #f4f6f8;
+  --color-neutral-100: #e8ecef;
+  --color-neutral-200: #d5dce2;
+  --color-neutral-300: #b7c0c8;
+  --color-neutral-400: #8f9aa6;
+  --color-neutral-500: #6d7784;
+  --color-neutral-600: #535d69;
+  --color-neutral-700: #39424d;
+  --color-neutral-800: #232a33;
+  --color-neutral-900: #151a20;
+  --color-neutral-950: #0b0f14;
 
   /* Semantic Colors */
   --color-success-50: #ecfdf5;
@@ -64,8 +64,8 @@
      ======================================== */
 
   /* Font Families */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
 
   /* Font Sizes (using clamp for fluid typography) */
   --text-xs: clamp(0.6875rem, 0.65rem + 0.1vw, 0.75rem); /* 11-12px */
@@ -130,11 +130,11 @@
      ======================================== */
   --radius-none: 0;
   --radius-sm: 0.25rem; /* 4px */
-  --radius-md: 0.5rem; /* 8px */
-  --radius-lg: 0.75rem; /* 12px */
-  --radius-xl: 1rem; /* 16px */
-  --radius-2xl: 1.25rem; /* 20px */
-  --radius-3xl: 1.5rem; /* 24px */
+  --radius-md: 0.375rem; /* 6px */
+  --radius-lg: 0.5rem; /* 8px */
+  --radius-xl: 0.5rem; /* 8px */
+  --radius-2xl: 0.75rem; /* 12px */
+  --radius-3xl: 1rem; /* 16px */
   --radius-full: 9999px;
 
   /* ========================================
@@ -153,9 +153,9 @@
   --shadow-glass-lg: 0 16px 48px rgb(0 0 0 / 0.2);
 
   /* Glow effects */
-  --shadow-glow-sm: 0 0 8px var(--color-primary-500);
-  --shadow-glow-md: 0 0 16px var(--color-primary-500);
-  --shadow-glow-lg: 0 0 24px var(--color-primary-500);
+  --shadow-glow-sm: 0 0 0 1px rgb(127 163 198 / 0.18);
+  --shadow-glow-md: 0 0 0 1px rgb(127 163 198 / 0.26);
+  --shadow-glow-lg: 0 0 0 1px rgb(127 163 198 / 0.34);
 
   /* ========================================
      2.6 Transitions & Animations
@@ -223,12 +223,12 @@
   --bg-secondary: var(--color-neutral-900);
   --bg-tertiary: var(--color-neutral-800);
   --bg-elevated: var(--color-neutral-800);
-  --bg-overlay: rgb(0 0 0 / 0.6);
+  --bg-overlay: rgb(5 7 10 / 0.72);
 
   /* Glass backgrounds */
-  --bg-glass: rgb(24 24 27 / 0.8);
-  --bg-glass-subtle: rgb(24 24 27 / 0.6);
-  --bg-glass-strong: rgb(24 24 27 / 0.95);
+  --bg-glass: rgb(17 21 27 / 0.88);
+  --bg-glass-subtle: rgb(17 21 27 / 0.76);
+  --bg-glass-strong: rgb(14 18 24 / 0.96);
 
   /* Text */
   --text-primary: var(--color-neutral-50);
@@ -238,9 +238,9 @@
   --text-inverse: var(--color-neutral-950);
 
   /* Borders */
-  --border-subtle: rgb(255 255 255 / 0.06);
-  --border-default: rgb(255 255 255 / 0.1);
-  --border-strong: rgb(255 255 255 / 0.15);
+  --border-subtle: rgb(255 255 255 / 0.05);
+  --border-default: rgb(255 255 255 / 0.09);
+  --border-strong: rgb(255 255 255 / 0.14);
   --border-focus: var(--color-primary-500);
 
   /* Accent */
@@ -250,9 +250,9 @@
   --accent-muted: var(--color-primary-900);
 
   /* Interactive states */
-  --hover-overlay: rgb(255 255 255 / 0.05);
-  --active-overlay: rgb(255 255 255 / 0.1);
-  --selected-bg: rgb(139 92 246 / 0.15);
+  --hover-overlay: rgb(255 255 255 / 0.04);
+  --active-overlay: rgb(255 255 255 / 0.08);
+  --selected-bg: rgb(127 163 198 / 0.12);
 
   /* Scrollbar */
   --scrollbar-track: var(--bg-secondary);
@@ -262,12 +262,12 @@
 
 /* Global utility classes for glow effects */
 .polychat-glow {
-  box-shadow: var(--shadow-glow-sm);
+  box-shadow: var(--shadow-sm);
   transition: var(--transition-all);
 }
 
 .polychat-glow:hover {
-  box-shadow: var(--shadow-glow-md);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
@@ -286,9 +286,9 @@
   --bg-overlay: rgb(0 0 0 / 0.4);
 
   /* Glass backgrounds */
-  --bg-glass: rgb(255 255 255 / 0.8);
-  --bg-glass-subtle: rgb(255 255 255 / 0.6);
-  --bg-glass-strong: rgb(255 255 255 / 0.95);
+  --bg-glass: rgb(255 255 255 / 0.84);
+  --bg-glass-subtle: rgb(255 255 255 / 0.68);
+  --bg-glass-strong: rgb(255 255 255 / 0.96);
 
   /* Text */
   --text-primary: var(--color-neutral-900);
@@ -306,7 +306,7 @@
   /* Interactive states */
   --hover-overlay: rgb(0 0 0 / 0.03);
   --active-overlay: rgb(0 0 0 / 0.06);
-  --selected-bg: rgb(139 92 246 / 0.1);
+  --selected-bg: rgb(79 116 149 / 0.1);
 
   /* Shadows (lighter for light mode) */
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
@@ -339,66 +339,66 @@
 /* Violet (Default) */
 [data-accent='violet'],
 :root {
-  --accent-primary: #8b5cf6;
-  --accent-secondary: #a78bfa;
-  --accent-tertiary: #c4b5fd;
-  --accent-muted: #4c1d95;
-  --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 50%, #c4b5fd 100%);
+  --accent-primary: #7f9db7;
+  --accent-secondary: #a7bbca;
+  --accent-tertiary: #d1dbe3;
+  --accent-muted: #2d3f4d;
+  --accent-gradient: linear-gradient(135deg, #27343f 0%, #516274 50%, #7f9db7 100%);
 }
 
 /* Blue */
 [data-accent='blue'] {
-  --accent-primary: #3b82f6;
-  --accent-secondary: #60a5fa;
-  --accent-tertiary: #93c5fd;
-  --accent-muted: #1e3a8a;
-  --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
+  --accent-primary: #6d94b8;
+  --accent-secondary: #92b3cf;
+  --accent-tertiary: #c8d8e6;
+  --accent-muted: #2b4257;
+  --accent-gradient: linear-gradient(135deg, #213041 0%, #4d657a 50%, #6d94b8 100%);
 }
 
 /* Emerald */
 [data-accent='green'],
 [data-accent='emerald'] {
-  --accent-primary: #10b981;
-  --accent-secondary: #34d399;
-  --accent-tertiary: #6ee7b7;
-  --accent-muted: #064e3b;
-  --accent-gradient: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+  --accent-primary: #5f8b7a;
+  --accent-secondary: #88a99d;
+  --accent-tertiary: #c3d4cf;
+  --accent-muted: #24433b;
+  --accent-gradient: linear-gradient(135deg, #223631 0%, #46635b 50%, #5f8b7a 100%);
 }
 
 /* Rose */
 [data-accent='rose'] {
-  --accent-primary: #f43f5e;
-  --accent-secondary: #fb7185;
-  --accent-tertiary: #fda4af;
-  --accent-muted: #881337;
-  --accent-gradient: linear-gradient(135deg, #f43f5e 0%, #fb7185 50%, #fda4af 100%);
+  --accent-primary: #9a6d76;
+  --accent-secondary: #b9939a;
+  --accent-tertiary: #d9c4c7;
+  --accent-muted: #4e2d36;
+  --accent-gradient: linear-gradient(135deg, #38232b 0%, #6a4954 50%, #9a6d76 100%);
 }
 
 /* Orange */
 [data-accent='orange'] {
-  --accent-primary: #f97316;
-  --accent-secondary: #fb923c;
-  --accent-tertiary: #fdba74;
-  --accent-muted: #7c2d12;
-  --accent-gradient: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fdba74 100%);
+  --accent-primary: #9a7b57;
+  --accent-secondary: #b79c7e;
+  --accent-tertiary: #d9c8b5;
+  --accent-muted: #513d25;
+  --accent-gradient: linear-gradient(135deg, #31261d 0%, #5e4935 50%, #9a7b57 100%);
 }
 
 /* Teal */
 [data-accent='teal'] {
-  --accent-primary: #14b8a6;
-  --accent-secondary: #2dd4bf;
-  --accent-tertiary: #5eead4;
-  --accent-muted: #115e59;
-  --accent-gradient: linear-gradient(135deg, #14b8a6 0%, #2dd4bf 50%, #5eead4 100%);
+  --accent-primary: #5d8f8b;
+  --accent-secondary: #84adab;
+  --accent-tertiary: #c4d8d7;
+  --accent-muted: #294b49;
+  --accent-gradient: linear-gradient(135deg, #223635 0%, #466765 50%, #5d8f8b 100%);
 }
 
 /* Cyan */
 [data-accent='cyan'] {
-  --accent-primary: #06b6d4;
-  --accent-secondary: #22d3ee;
-  --accent-tertiary: #67e8f9;
-  --accent-muted: #164e63;
-  --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #22d3ee 50%, #67e8f9 100%);
+  --accent-primary: #5f90a8;
+  --accent-secondary: #89afc0;
+  --accent-tertiary: #c2d4de;
+  --accent-muted: #294351;
+  --accent-gradient: linear-gradient(135deg, #20313b 0%, #476172 50%, #5f90a8 100%);
 }
 
 /* ==========================================================================
@@ -431,6 +431,17 @@ body {
   background-color: var(--bg-primary);
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ==========================================================================

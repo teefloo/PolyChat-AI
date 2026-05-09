@@ -12,7 +12,7 @@ const ThemeToggle: React.FC = () => {
     <button
       onClick={toggleTheme}
       className={`polychat-btn-modern theme-toggle-btn ${isDark ? 'dark-theme' : 'light-theme'}`}
-      title={isDark ? 'LIGHT MODE' : 'DARK MODE'}
+      title={isDark ? 'Mode clair' : 'Mode sombre'}
       aria-label={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
     >
       {isDark ? <Sun size={16} /> : <Moon size={16} />}

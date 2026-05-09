@@ -52,7 +52,7 @@ const TemplateSelector: React.FC<Props> = ({
         <div className="template-selector-header">
           <h3 className="template-selector-title">
             <Sparkles size={24} />
-            Templates & Actions
+            Templates et actions
           </h3>
           <button className="template-selector-close" onClick={onClose} aria-label="Fermer">
             <X size={20} />
@@ -64,7 +64,7 @@ const TemplateSelector: React.FC<Props> = ({
           <input
             type="text"
             className="template-selector-search-input"
-            placeholder="Rechercher des templates ou actions..."
+            placeholder="Rechercher des templates ou des actions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -162,7 +162,7 @@ const TemplateSelector: React.FC<Props> = ({
                 <div className="template-empty-state">
                   <Sparkles size={48} />
                   <h3>Aucun template trouvé</h3>
-                  <p>Essayez de modifier vos critères de recherche ou de catégorie</p>
+                  <p>Essayez de modifier vos critères de recherche ou de catégorie.</p>
                 </div>
               )}
             </div>
@@ -191,8 +191,8 @@ const TemplateSelector: React.FC<Props> = ({
             ) : (
               <div className="template-empty-state">
                 <Sparkles size={48} />
-                <h3>Aucune action trouvée</h3>
-                <p>Essayez de modifier vos critères de recherche</p>
+                  <h3>Aucune action trouvée</h3>
+                  <p>Essayez de modifier vos critères de recherche.</p>
               </div>
             )}
           </div>

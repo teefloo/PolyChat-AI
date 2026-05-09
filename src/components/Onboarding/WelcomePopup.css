@@ -7,7 +7,7 @@
   z-index: var(--z-popover);
   width: 100%;
   max-width: 24rem;
-  background: var(--bg-glass-strong);
+  background: rgba(12, 16, 21, 0.98);
   backdrop-filter: blur(var(--glass-blur-lg));
   border: 1px solid var(--border-default);
   border-radius: var(--radius-xl);
@@ -26,17 +26,17 @@
 .welcome-popup-avatar {
   width: 48px;
   height: 48px;
-  background: var(--accent-gradient);
+  background: rgba(127, 163, 198, 0.12);
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-primary);
   flex-shrink: 0;
 }
 
 .welcome-popup-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: var(--text-lg);
   font-weight: var(--font-bold);
   color: var(--text-primary);

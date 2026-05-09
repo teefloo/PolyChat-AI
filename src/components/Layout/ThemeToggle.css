@@ -6,8 +6,8 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: transparent;
-  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   color: var(--text-tertiary);
   cursor: pointer;
@@ -15,13 +15,13 @@
 }
 
 .theme-toggle-btn:hover {
-  background: var(--hover-overlay);
-  border-color: var(--border-default);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-strong);
   color: var(--text-primary);
 }
 
 .theme-toggle-btn.dark-theme {
-  color: var(--accent-tertiary);
+  color: var(--accent-secondary);
 }
 
 .theme-toggle-btn.light-theme {

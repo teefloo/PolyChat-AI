@@ -133,7 +133,7 @@ const InlineModelPicker: React.FC<InlineModelPickerProps> = ({ onSelect, current
                       const prompt = parseFloat(m.pricing?.prompt || '0') || 0;
                       const completion = parseFloat(m.pricing?.completion || '0') || 0;
                       if (prompt === 0 && completion === 0) {
-                        shortPrice = 'FREE';
+                        shortPrice = 'Gratuit';
                         priceClass = 'imp-price-free';
                       } else {
                         const p = prompt * 1_000_000; // $/1M

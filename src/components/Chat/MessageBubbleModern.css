@@ -47,13 +47,14 @@
 
 .message-bubble-modern.user .message-bubble-modern-avatar > svg:first-child,
 .message-bubble-modern.user .message-bubble-modern-avatar > .lucide:first-child {
-  background: var(--accent-gradient);
-  color: white;
+  background: rgba(127, 163, 198, 0.12);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
 }
 
 .message-bubble-modern.assistant .message-bubble-modern-avatar > svg:first-child,
 .message-bubble-modern.assistant .message-bubble-modern-avatar > .lucide:first-child {
-  background: var(--bg-glass);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-default);
   color: var(--text-secondary);
 }
@@ -114,7 +115,7 @@
   position: relative;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-xl);
-  background: var(--bg-glass);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(var(--glass-blur-sm));
   -webkit-backdrop-filter: blur(var(--glass-blur-sm));
   border: 1px solid var(--border-default);
@@ -123,9 +124,9 @@
 }
 
 .message-bubble-modern.user .message-bubble-modern-body {
-  background: var(--accent-gradient);
-  border-color: transparent;
-  color: white;
+  background: rgba(127, 163, 198, 0.1);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
   border-bottom-right-radius: var(--radius-sm);
 }
 
@@ -143,7 +144,7 @@
 }
 
 .message-bubble-modern.user .message-bubble-modern-text {
-  color: white;
+  color: var(--text-primary);
 }
 
 /* Markdown content */
@@ -203,20 +204,20 @@
 }
 
 .message-bubble-modern.user .message-bubble-modern-text a {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--accent-secondary);
 }
 
 .message-bubble-modern-text blockquote {
   margin: 0.75em 0;
   padding: var(--space-2) var(--space-3);
-  background: var(--bg-tertiary);
-  border-left: 3px solid var(--accent-primary);
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--accent-primary);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .message-bubble-modern.user .message-bubble-modern-text blockquote {
-  background: rgba(255, 255, 255, 0.1);
-  border-left-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  border-left-color: var(--border-strong);
 }
 
 .message-bubble-modern-text table {
@@ -234,7 +235,7 @@
 }
 
 .message-bubble-modern-text th {
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.04);
   font-weight: var(--font-semibold);
 }
 
@@ -244,7 +245,7 @@
 }
 
 .message-bubble-modern.user .message-bubble-modern-text th {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Code styling */
@@ -252,14 +253,14 @@
   font-family: var(--font-mono);
   font-size: 0.9em;
   padding: var(--space-0-5) var(--space-1-5);
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
 }
 
 .message-bubble-modern.user .message-bubble-modern-text code {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Code block wrapper */
@@ -268,7 +269,7 @@
   margin: 0.75em 0;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--color-neutral-900);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-default);
 }
 
@@ -285,7 +286,7 @@
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
-  background: var(--bg-glass);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   font-size: 11px;
@@ -302,9 +303,9 @@
 }
 
 .code-copy-btn.success {
-  background: rgb(16 185 129 / 0.15);
-  border-color: var(--color-success-500);
-  color: var(--color-success-500);
+  background: rgba(93, 143, 139, 0.18);
+  border-color: rgb(93 143 139 / 0.35);
+  color: var(--accent-secondary);
 }
 
 .message-bubble-modern-text pre {
@@ -336,7 +337,7 @@
 }
 
 .message-bubble-modern.user .streaming-cursor {
-  background: white;
+  background: var(--accent-primary);
 }
 
 /* Actions */
@@ -360,7 +361,7 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  background: var(--bg-tertiary);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   color: var(--text-muted);
@@ -469,7 +470,7 @@
   max-width: 100%;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Responsive */
