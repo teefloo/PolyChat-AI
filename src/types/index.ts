@@ -1,31 +1,10 @@
 export interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
-  content: string | MessageContent[];
+  content: string;
   timestamp: Date;
-  modelId?: string; // Ajout pour identifier quel modèle a généré la réponse
-  streaming?: boolean; // Indique si le message est en cours de streaming
-  imageData?: GeneratedImage; // Pour les messages contenant des images générées
-}
-
-export interface MessageContent {
-  type: 'text' | 'image_url';
-  text?: string;
-  image_url?: {
-    url: string;
-    detail?: 'low' | 'high' | 'auto';
-  };
-}
-
-export interface GeneratedImage {
-  url: string;
-  width: number;
-  height: number;
-  format: string;
-  size: number; // in bytes
-  prompt: string;
-  model: string;
-  timestamp: Date;
+  modelId?: string;
+  streaming?: boolean;
 }
 
 export interface Model {
@@ -39,94 +18,23 @@ export interface Settings {
   apiKey: string;
   selectedModel: string;
   theme: 'light' | 'dark';
-  accent?: 'violet' | 'blue' | 'green' | 'rose' | 'orange' | 'teal' | 'red' | 'cyan';
-  systemPrompt: string; // Nouveau champ pour l'instruction système
-  tone?: 'neutre' | 'formel' | 'amical' | 'professionnel' | 'enthousiaste';
-  notificationsEnabled?: boolean;
-  ragEnabled?: boolean;
-  hasOnboarded?: boolean;
+  systemPrompt: string;
+  temperature: number;
+  maxTokens: number;
+}
+
+export interface WindowConfig {
+  modelId: string;
+  modelName: string;
 }
 
 export interface ChatSession {
   id: string;
-  modelId: string;
-  modelName: string;
+  title: string;
   messages: Message[];
+  windows: WindowConfig[];
   isLoading: boolean;
   error: string | null;
-  isTemporary?: boolean;
-}
-
-// New types for conversation templates and quick actions
-export interface ConversationTemplate {
-  id: string;
-  name: string;
-  category: TemplateCategory;
-  description: string;
-  systemPrompt: string;
-  userMessage: string;
-  tags: string[];
-  isCustom: boolean;
-  modelSpecific?: string[]; // Models this template works best with
-  icon?: string;
-  color?: string;
-  examples?: string[]; // Exemples d'utilisation du template
-}
-
-export type TemplateCategory =
-  | 'programming'
-  | 'writing'
-  | 'analysis'
-  | 'creative'
-  | 'learning'
-  | 'business'
-  | 'personal';
-
-export interface QuickAction {
-  id: string;
-  name: string;
-  icon: string;
-  action: QuickActionType;
-  description: string;
-  requiresSelection: boolean;
-  modelSpecific?: string[]; // Models this action works best with
-  systemPrompt?: string;
-  userMessageTemplate?: string;
-}
-
-export type QuickActionType =
-  | 'explain'
-  | 'optimize'
-  | 'debug'
-  | 'comment'
-  | 'translate'
-  | 'summarize'
-  | 'review'
-  | 'improve'
-  | 'simplify'
-  | 'expand';
-
-export interface TemplateCategoryInfo {
-  id: TemplateCategory;
-  name: string;
-  description: string;
-  icon: string;
-  color: string;
-}
-
-// Analytics types
-export interface ModelStats {
-  conversations: number;
-  messages: number;
-  avgResponseTimeMs: number;
-}
-
-export interface UsageStats {
-  totalConversations: number;
-  totalMessages: number;
-  totalUserMessages: number;
-  totalAssistantMessages: number;
-  avgResponseTimeMs: number;
-  perModel: Record<string, ModelStats>;
-  lastUpdated: string; // ISO date string
+  createdAt: Date;
+  updatedAt: Date;
 }

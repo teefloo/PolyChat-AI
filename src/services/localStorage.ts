@@ -1,86 +1,33 @@
-import type { Message, ChatSession, MessageContent } from '../types/index';
+import type { ChatSession } from '../types/index';
 
-const MESSAGES_STORAGE_KEY = 'polychat-messages';
-const HISTORY_STORAGE_KEY = 'polychat_history';
+const STORAGE_KEY = 'polychat_history';
 
-// Helper function to get text content from message
-const getMessageText = (content: string | MessageContent[]): string => {
-  if (typeof content === 'string') {
-    return content;
-  }
-  // For MessageContent[], extract text from text type content
-  return content
-    .filter((item) => item.type === 'text')
-    .map((item) => item.text || '')
-    .join(' ');
-};
-
-export const saveMessages = (messages: Message[]) => {
+export function saveChatHistory(sessions: ChatSession[]): void {
   try {
-    localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(messages));
-  } catch {
-    // Storage quota exceeded or disabled
-  }
-};
-
-export const loadMessages = (): Message[] => {
-  try {
-    const stored = localStorage.getItem(MESSAGES_STORAGE_KEY);
-    if (stored) {
-      // Essayer de parser, si ça échoue, les données sont corrompues
-      const parsed = JSON.parse(stored);
-      // Vérifier si c'est bien un tableau
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-    }
-    // Si rien n'est stocké, ou si les données sont corrompues/invalides
-    localStorage.removeItem(MESSAGES_STORAGE_KEY); // Nettoyer les données invalides
-    return [];
-  } catch {
-    // En cas d'erreur de parsing, nettoyer le stockage
-    localStorage.removeItem(MESSAGES_STORAGE_KEY);
-    return [];
-  }
-};
-
-export const saveChatHistory = (sessions: ChatSession[]) => {
-  try {
-    // Filter out empty conversations to avoid data pollution
-    const filteredSessions = sessions.filter((session) => {
-      // Keep sessions that have at least one non-empty message
-      return session.messages.some((message) => {
-        const textContent = getMessageText(message.content);
-        return textContent && textContent.trim().length > 0;
-      });
-    });
-
-    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(filteredSessions));
+    const filtered = sessions.filter((s) => s.messages.length > 0);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
   } catch {
     // Storage quota exceeded
   }
-};
+}
 
-export const loadChatHistory = (): ChatSession[] => {
+export function loadChatHistory(): ChatSession[] {
   try {
-    const stored = localStorage.getItem(HISTORY_STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        // Convertir les timestamps string en objets Date
-        return parsed.map((session) => ({
-          ...session,
-          messages: session.messages.map((msg: Message) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp),
-          })),
-        }));
-      }
-    }
-    localStorage.removeItem(HISTORY_STORAGE_KEY);
-    return [];
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((s: ChatSession & { modelId?: string; modelName?: string }) => ({
+      ...s,
+      createdAt: new Date(s.createdAt),
+      updatedAt: new Date(s.updatedAt),
+      messages: s.messages.map((m) => ({
+        ...m,
+        timestamp: new Date(m.timestamp),
+      })),
+      windows: s.windows || [{ modelId: s.modelId || '', modelName: s.modelName || '' }],
+    }));
   } catch {
-    localStorage.removeItem(HISTORY_STORAGE_KEY);
     return [];
   }
-};
+}

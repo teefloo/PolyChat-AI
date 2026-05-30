@@ -1,8 +1,9 @@
 declare module 'react-syntax-highlighter' {
-  export const Prism: React.ComponentType<{ [key: string]: unknown }>;
+  import type { ComponentType } from 'react';
+  export const Prism: ComponentType<Record<string, unknown>>;
 }
 
 declare module 'react-syntax-highlighter/dist/esm/styles/prism' {
-  export const oneDark: { [key: string]: unknown };
-  export const oneLight: { [key: string]: unknown };
+  export const oneDark: Record<string, React.CSSProperties>;
+  export const oneLight: Record<string, React.CSSProperties>;
 }
