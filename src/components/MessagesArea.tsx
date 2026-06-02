@@ -1,7 +1,7 @@
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Bot, User, Trash2, RotateCcw, AlertCircle, RefreshCw } from 'lucide-react';
+import { Bot, User, Trash2, RotateCcw, AlertCircle, RefreshCw, ArrowDown } from 'lucide-react';
 import type { Message } from '../types/index';
 
 interface MessagesAreaProps {
@@ -16,6 +16,7 @@ interface MessagesAreaProps {
 export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRegenerate, onRetry }: MessagesAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const wasAtBottom = useRef(true);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,17 +26,21 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
     const updateAtBottom = () => {
       const dist = container.scrollHeight - container.scrollTop - container.clientHeight;
       wasAtBottom.current = dist < 50;
+      setShowScrollButton(dist >= 100);
     };
 
     const onWheel = () => updateAtBottom();
     const onTouchMove = () => updateAtBottom();
+    const onScroll = () => updateAtBottom();
 
     container.addEventListener('wheel', onWheel, { passive: true });
     container.addEventListener('touchmove', onTouchMove, { passive: true });
+    container.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
       container.removeEventListener('wheel', onWheel);
       container.removeEventListener('touchmove', onTouchMove);
+      container.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -48,6 +53,7 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
       }
       const dist = container.scrollHeight - container.scrollTop - container.clientHeight;
       wasAtBottom.current = dist < 50;
+      setShowScrollButton(dist >= 100);
     });
     return () => cancelAnimationFrame(id);
   }, [messages, isLoading]);
@@ -59,9 +65,17 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
     return -1;
   }, [messages]);
 
+  const scrollToBottom = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+    wasAtBottom.current = true;
+    setShowScrollButton(false);
+  }, []);
+
   if (messages.length === 0 && !isLoading && !error) {
     return (
-      <div className="messages-empty" role="status">
+      <div className="messages-empty">
         <Bot className="messages-empty-icon" aria-hidden="true" />
         <div className="messages-empty-title">Nouvelle conversation</div>
         <div className="messages-empty-text">
@@ -80,17 +94,20 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
   }
 
   return (
-    <div ref={containerRef} className="messages-area" role="log" aria-label="Conversation" aria-live="polite">
+    <div ref={containerRef} className="messages-area" role="log" aria-label="Conversation" aria-live="polite" aria-busy={isLoading}>
       {messages.map((msg, i) => (
-        <div key={msg.id} className={`message ${msg.role}`} role="article" aria-label={msg.role === 'user' ? 'Votre message' : 'Réponse de l\'assistant'}>
+        <div
+          key={msg.id}
+          className={`message ${msg.role}`}
+          role="article"
+          aria-label={msg.role === 'user' ? 'Votre message' : "Réponse de l'assistant"}
+        >
           <div className="message-avatar" aria-hidden="true">
             {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
           </div>
           <div className="message-content" aria-live={msg.streaming ? 'polite' : 'off'}>
             {msg.role === 'assistant' ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {msg.content}
-              </ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
             ) : (
               msg.content
             )}
@@ -101,10 +118,18 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
           {msg.role === 'assistant' && onDeleteMessage && i === lastAssistantIndex && !isLoading && (
             <div className="message-actions">
               {deleteConfirmId === msg.id ? (
-                <div className="delete-confirm" role="alertdialog" aria-labelledby="delete-confirm-text" aria-describedby="delete-confirm-desc">
-                  <span id="delete-confirm-text">Supprimer ce message ?</span>
-                  <span id="delete-confirm-desc" className="visually-hidden">Cette action est irréversible.</span>
+                <div
+                  className="delete-confirm"
+                  role="alertdialog"
+                  aria-labelledby={`delete-confirm-text-${msg.id}`}
+                  aria-describedby={`delete-confirm-desc-${msg.id}`}
+                >
+                  <span id={`delete-confirm-text-${msg.id}`}>Supprimer ce message ?</span>
+                  <span id={`delete-confirm-desc-${msg.id}`} className="visually-hidden">
+                    Cette action est irréversible.
+                  </span>
                   <button
+                    type="button"
                     className="column-action-btn confirm"
                     onClick={() => {
                       onDeleteMessage(msg.id);
@@ -115,6 +140,7 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
                     Supprimer
                   </button>
                   <button
+                    type="button"
                     className="column-action-btn"
                     onClick={() => setDeleteConfirmId(null)}
                     aria-label="Annuler la suppression"
@@ -125,21 +151,23 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
               ) : (
                 <>
                   <button
+                    type="button"
                     className="column-action-btn"
                     title="Supprimer ce message"
                     aria-label="Supprimer ce message"
                     onClick={() => setDeleteConfirmId(msg.id)}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={14} aria-hidden="true" />
                   </button>
                   {onRegenerate && (
                     <button
+                      type="button"
                       className="column-action-btn"
                       title="Régénérer la réponse"
                       aria-label="Régénérer la réponse"
                       onClick={onRegenerate}
                     >
-                      <RotateCcw size={14} />
+                      <RotateCcw size={14} aria-hidden="true" />
                     </button>
                   )}
                 </>
@@ -149,7 +177,6 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
         </div>
       ))}
 
-      {/* Error display */}
       {error && (
         <div className="message-error" role="alert" aria-live="assertive">
           <div className="message-error-icon" aria-hidden="true">
@@ -160,8 +187,13 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
             <div className="message-error-text">{error}</div>
           </div>
           {onRetry && (
-            <button className="message-error-retry" onClick={onRetry} aria-label="Réessayer l'envoi du message">
-              <RefreshCw size={14} />
+            <button
+              type="button"
+              className="message-error-retry"
+              onClick={onRetry}
+              aria-label="Réessayer l'envoi du message"
+            >
+              <RefreshCw size={14} aria-hidden="true" />
               Réessayer
             </button>
           )}
@@ -177,6 +209,18 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
             <span className="streaming-dot" aria-hidden="true" />
           </div>
         </div>
+      )}
+
+      {showScrollButton && (
+        <button
+          type="button"
+          className="messages-scroll-bottom"
+          onClick={scrollToBottom}
+          aria-label="Aller au dernier message"
+          title="Aller au dernier message"
+        >
+          <ArrowDown size={16} aria-hidden="true" />
+        </button>
       )}
     </div>
   );

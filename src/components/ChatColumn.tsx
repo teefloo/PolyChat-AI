@@ -14,11 +14,11 @@ interface ChatColumnProps {
   models: Model[];
   onUpdateModel: (modelId: string, modelName: string) => void;
   onSendMessage: (content: string) => void;
+  onStopGeneration?: () => void;
   onDeleteMessage: (messageId: string) => void;
   onRegenerate: () => void;
   onOpenSettings: () => void;
   onCloseWindow: () => void;
-  hideInput?: boolean;
 }
 
 export function ChatColumn({
@@ -30,11 +30,11 @@ export function ChatColumn({
   models,
   onUpdateModel,
   onSendMessage,
+  onStopGeneration,
   onDeleteMessage,
   onRegenerate,
   onOpenSettings,
   onCloseWindow,
-  hideInput = false,
 }: ChatColumnProps) {
   const handleSend = useCallback(
     (content: string) => {
@@ -64,7 +64,7 @@ export function ChatColumn({
 
   if (!window) {
     return (
-      <div className={`chat-column${isFocused ? ' focused' : ''}`} onClick={onFocus}>
+      <div className={`chat-column${isFocused ? ' focused' : ''}`}>
         <div className="messages-empty">
           <div className="messages-empty-title">Aucune fenêtre</div>
         </div>
@@ -74,10 +74,16 @@ export function ChatColumn({
 
   if (!window.modelId) {
     return (
-      <div className={`chat-column${isFocused ? ' focused' : ''}`} onClick={onFocus}>
+      <section
+        className={`chat-column${isFocused ? ' focused' : ''}`}
+        onClick={onFocus}
+        aria-label={`Fenêtre ${windowIndex + 1}, aucun modèle sélectionné`}
+      >
         <div className="column-header">
           <div className="column-header-left">
-            <span className="column-header-index">Fenêtre {windowIndex + 1}</span>
+            <span className="column-header-index" aria-hidden="true">
+              Fenêtre {windowIndex + 1}
+            </span>
             <ModelSelector
               models={models}
               selectedModel=""
@@ -89,6 +95,7 @@ export function ChatColumn({
           </div>
           {canClose && (
             <button
+              type="button"
               className="column-action-btn"
               onClick={(e) => {
                 e.stopPropagation();
@@ -97,29 +104,35 @@ export function ChatColumn({
               aria-label="Fermer cette fenêtre"
               title="Fermer cette fenêtre"
             >
-              <X size={14} />
+              <X size={14} aria-hidden="true" />
             </button>
           )}
         </div>
         <div className="messages-empty">
-          <Settings className="messages-empty-icon" />
+          <Settings className="messages-empty-icon" aria-hidden="true" />
           <div className="messages-empty-title">Choisissez un modèle</div>
           <div className="messages-empty-text">
             Sélectionnez un modèle ci-dessus pour commencer à discuter
           </div>
-          <button className="messages-empty-action" onClick={onOpenSettings}>
+          <button type="button" className="messages-empty-action" onClick={onOpenSettings}>
             Configurer les paramètres
           </button>
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className={`chat-column${isFocused ? ' focused' : ''}`} onClick={onFocus}>
+    <section
+      className={`chat-column${isFocused ? ' focused' : ''}`}
+      onClick={onFocus}
+      aria-label={`Fenêtre ${windowIndex + 1} avec ${window.modelName || 'modèle'}`}
+    >
       <div className="column-header">
         <div className="column-header-left">
-          <span className="column-header-index">Fenêtre {windowIndex + 1}</span>
+          <span className="column-header-index" aria-hidden="true">
+            Fenêtre {windowIndex + 1}
+          </span>
           <ModelSelector
             models={models}
             selectedModel={window.modelId}
@@ -131,6 +144,7 @@ export function ChatColumn({
         </div>
         {canClose && (
           <button
+            type="button"
             className="column-action-btn"
             onClick={(e) => {
               e.stopPropagation();
@@ -139,7 +153,7 @@ export function ChatColumn({
             aria-label="Fermer cette fenêtre"
             title="Fermer cette fenêtre"
           >
-            <X size={14} />
+            <X size={14} aria-hidden="true" />
           </button>
         )}
       </div>
@@ -151,14 +165,13 @@ export function ChatColumn({
         onRegenerate={handleRegenerate}
         onRetry={handleRetry}
       />
-      {!hideInput && (
-        <ChatInput
-          onSend={handleSend}
-          isLoading={window.isLoading}
-          disabled={!window.modelId}
-          placeholder="Envoyer un message... (⌘K pour focus)"
-        />
-      )}
-    </div>
+      <ChatInput
+        onSend={handleSend}
+        onStop={onStopGeneration}
+        isLoading={window.isLoading}
+        disabled={!window.modelId}
+        placeholder="Envoyer un message…  (⌘K pour focus)"
+      />
+    </section>
   );
 }

@@ -1,16 +1,19 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback, useId } from 'react';
+import { Send, Square } from 'lucide-react';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
+  onStop?: () => void;
   isLoading: boolean;
   disabled?: boolean;
   placeholder?: string;
 }
 
-export function ChatInput({ onSend, isLoading, disabled, placeholder }: ChatInputProps) {
+export function ChatInput({ onSend, onStop, isLoading, disabled, placeholder }: ChatInputProps) {
   const [value, setValue] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const reactId = useId();
+  const inputId = `chat-message-input-${reactId.replace(/[:]/g, '')}`;
 
   const adjustHeight = useCallback(() => {
     const el = textareaRef.current;
@@ -23,12 +26,16 @@ export function ChatInput({ onSend, isLoading, disabled, placeholder }: ChatInpu
     adjustHeight();
   }, [value, adjustHeight]);
 
-  // Global keyboard shortcut: Cmd/Ctrl+K to focus input
+  // Global keyboard shortcut: Cmd/Ctrl+K to focus the FIRST available input
   useEffect(() => {
     function handleGlobalKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        textareaRef.current?.focus();
+        const all = document.querySelectorAll<HTMLTextAreaElement>('textarea.chat-input');
+        const target = all[0];
+        if (target && !target.disabled) {
+          target.focus();
+        }
       }
     }
     document.addEventListener('keydown', handleGlobalKey);
@@ -42,23 +49,28 @@ export function ChatInput({ onSend, isLoading, disabled, placeholder }: ChatInpu
     setValue('');
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
+      textareaRef.current.focus();
     }
   }, [value, isLoading, disabled, onSend]);
+
+  const handleStop = useCallback(() => {
+    onStop?.();
+    textareaRef.current?.focus();
+  }, [onStop]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
+        if (isLoading) return;
         handleSend();
       }
     },
-    [handleSend]
+    [handleSend, isLoading]
   );
 
   const charCount = value.length;
   const showCounter = charCount > 100;
-
-  const inputId = 'chat-message-input';
 
   return (
     <div className="chat-input-wrapper">
@@ -70,26 +82,39 @@ export function ChatInput({ onSend, isLoading, disabled, placeholder }: ChatInpu
           id={inputId}
           ref={textareaRef}
           className="chat-input"
-          placeholder={placeholder || "Envoyer un message…  (⌘K pour focus)"}
+          placeholder={placeholder || 'Envoyer un message…  (⌘K pour focus)'}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={1}
           disabled={disabled}
-          aria-describedby={showCounter ? 'char-counter' : undefined}
+          aria-describedby={showCounter ? `${inputId}-counter` : undefined}
         />
-        <button
-          className="chat-send-btn"
-          onClick={handleSend}
-          disabled={!value.trim() || isLoading || disabled}
-          title="Envoyer le message (Entrée)"
-          aria-label="Envoyer le message"
-        >
-          <Send size={16} />
-        </button>
+        {isLoading && onStop ? (
+          <button
+            type="button"
+            className="chat-stop-btn"
+            onClick={handleStop}
+            title="Arrêter la génération"
+            aria-label="Arrêter la génération de la réponse"
+          >
+            <Square size={12} fill="currentColor" aria-hidden="true" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="chat-send-btn"
+            onClick={handleSend}
+            disabled={!value.trim() || isLoading || disabled}
+            title="Envoyer le message (Entrée)"
+            aria-label="Envoyer le message"
+          >
+            <Send size={16} aria-hidden="true" />
+          </button>
+        )}
       </div>
       {showCounter && (
-        <div id="char-counter" className="chat-input-counter">
+        <div id={`${inputId}-counter`} className="chat-input-counter" role="status">
           {charCount.toLocaleString()} caractères
         </div>
       )}

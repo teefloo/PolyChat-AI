@@ -121,12 +121,12 @@ export function Sidebar({
               aria-label="Rechercher une conversation"
             />
           </div>
-          <button className="sidebar-new-chat" onClick={onNewSession}>
-            <Plus size={16} />
+          <button type="button" className="sidebar-new-chat" onClick={onNewSession}>
+            <Plus size={16} aria-hidden="true" />
             Nouvelle conversation
           </button>
         </div>
-        <div className="sidebar-sessions">
+        <div className="sidebar-sessions" role="list" aria-label="Conversations enregistrées">
           {groups.length === 0 ? (
             <div className="sidebar-empty">
               <MessageSquare className="sidebar-empty-icon" />
@@ -137,7 +137,9 @@ export function Sidebar({
           ) : (
             groups.map((group) => (
               <div key={group.label} className="sidebar-date-group">
-                <div className="sidebar-date-label">{group.label}</div>
+                <div className="sidebar-date-label" aria-hidden="true">
+                  {group.label}
+                </div>
                 {group.sessions.map((session) => (
                   <div
                     key={session.id}
@@ -153,11 +155,17 @@ export function Sidebar({
                         e.preventDefault();
                         onSelectSession(session.id);
                         onClose();
+                      } else if (e.key === 'F2') {
+                        e.preventDefault();
+                        startRename(session.id, session.title);
                       }
                     }}
                     tabIndex={0}
-                    role="button"
+                    role="option"
                     aria-selected={session.id === activeSessionId}
+                    aria-label={`Conversation : ${session.title}${
+                      session.id === activeSessionId ? ' (active)' : ''
+                    }`}
                   >
                     <div className="sidebar-session-info">
                       {editingId === session.id ? (
@@ -223,19 +231,19 @@ export function Sidebar({
                         </div>
                       ) : (
                         <>
-                          <div className="sidebar-session-title">
-                            {session.title}
+                          <div className="sidebar-session-title" title={session.title}>
+                            <span className="sidebar-session-title-text">{session.title}</span>
                             <span
                               className="sidebar-window-dots"
-                              aria-label={`${session.windowCount} fenêtre${session.windowCount > 1 ? 's' : ''} ouverte${session.windowCount > 1 ? 's' : ''}`}
-                              title={`${session.windowCount} fenêtre${session.windowCount > 1 ? 's' : ''}`}
+                              aria-label={`${session.windowCount} colonne${session.windowCount > 1 ? 's' : ''} ouverte${session.windowCount > 1 ? 's' : ''}`}
+                              title={`${session.windowCount} colonne${session.windowCount > 1 ? 's' : ''}`}
                             >
                               {Array.from({ length: session.windowCount }, (_, i) => (
-                                <span key={i} className="sidebar-window-dot" />
+                                <span key={i} className="sidebar-window-dot" aria-hidden="true" />
                               ))}
                             </span>
                           </div>
-                          <div className="sidebar-session-model">
+                          <div className="sidebar-session-model" title={session.windows.slice(0, session.windowCount).map((w) => w.modelName || 'Sans modèle').join(' · ')}>
                             {session.windows.slice(0, session.windowCount).map((w, i) => (
                               <span key={w.id} className="sidebar-session-model-item">
                                 {i > 0 && ' · '}

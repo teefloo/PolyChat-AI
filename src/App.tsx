@@ -183,6 +183,20 @@ function AppContent() {
     [activeSessionId, focusedWindowId, removeMessage]
   );
 
+  const stopGeneration = useCallback(
+    (windowId: string) => {
+      if (!activeSessionId) return;
+      const key = `${activeSessionId}:${windowId}`;
+      const controller = abortRefs.current.get(key);
+      if (controller) {
+        controller.abort();
+        abortRefs.current.delete(key);
+        setWindowLoading(activeSessionId, windowId, false);
+      }
+    },
+    [activeSessionId, setWindowLoading]
+  );
+
   const regenerate = useCallback(
     (windowId: string) => {
       if (!activeSessionId) return;
@@ -277,25 +291,29 @@ function AppContent() {
           activeSessionTitle={activeSession?.title}
         />
         <div className="window-bar" role="toolbar" aria-label="Fenêtres de la page active">
-          <span className="window-bar-label">Fenêtres</span>
-          {[1, 2, 3].map((n) => (
-            <button
-              key={n}
-              onClick={() => changeWindowCount(n as 1 | 2 | 3)}
-              className={`window-bar-btn ${windowCount === n ? 'active' : ''}`}
-              aria-label={`${n} fenêtre${n > 1 ? 's' : ''}`}
-              aria-pressed={windowCount === n}
-            >
-              {n}
-            </button>
-          ))}
+          <span className="window-bar-label" id="window-bar-label">Colonnes</span>
+          <div className="window-bar-group" role="group" aria-labelledby="window-bar-label">
+            {[1, 2, 3].map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => changeWindowCount(n as 1 | 2 | 3)}
+                className={`window-bar-btn ${windowCount === n ? 'active' : ''}`}
+                aria-label={`${n} colonne${n > 1 ? 's' : ''}`}
+                aria-pressed={windowCount === n}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
           <button
+            type="button"
             className="window-bar-new"
             onClick={createNewSession}
-            aria-label="Nouvelle page"
-            title="Créer une nouvelle page dans l'historique"
+            aria-label="Nouvelle conversation dans l'historique"
+            title="Créer une nouvelle conversation"
           >
-            Nouvelle page
+            Nouvelle conversation
           </button>
         </div>
         <div className="chat-columns">
@@ -310,6 +328,7 @@ function AppContent() {
               models={models}
               onUpdateModel={(modelId, modelName) => updateColumnModel(win.id, modelId, modelName)}
               onSendMessage={(content) => sendMessage(content, win.id)}
+              onStopGeneration={() => stopGeneration(win.id)}
               onDeleteMessage={deleteMessage}
               onRegenerate={() => regenerate(win.id)}
               onOpenSettings={toggleSettings}

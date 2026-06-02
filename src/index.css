@@ -458,10 +458,15 @@ body {
 .window-bar {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 6px 16px;
   border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-surface);
+}
+
+.window-bar-group {
+  display: flex;
+  gap: 4px;
 }
 
 .window-bar-label {
@@ -470,6 +475,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-weight: 500;
+  margin-right: 2px;
 }
 
 .window-bar-btn {
@@ -641,6 +647,17 @@ body {
 
 .model-selector-option.active {
   background: var(--accent-subtle);
+}
+
+.model-selector-option.focused {
+  background: var(--bg-hover);
+}
+
+.model-selector-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
 }
 
 .model-selector-option-name {
@@ -913,6 +930,32 @@ body {
   animation: pulse 1s ease-in-out infinite;
 }
 
+/* Scroll to bottom button */
+.messages-scroll-bottom {
+  position: sticky;
+  bottom: 12px;
+  align-self: center;
+  margin-top: auto;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.15s, background-color 0.15s;
+  z-index: 5;
+}
+
+.messages-scroll-bottom:hover {
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+
 @keyframes pulse {
   0%,
   100% {
@@ -1012,6 +1055,35 @@ body {
 .chat-send-btn:disabled {
   opacity: 0.2;
   cursor: not-allowed;
+}
+
+.chat-stop-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: var(--error);
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.15s, transform 0.1s;
+  animation: pulseStop 1.6s ease-in-out infinite;
+}
+
+.chat-stop-btn:hover {
+  opacity: 0.85;
+}
+
+.chat-stop-btn:active {
+  transform: scale(0.92);
+}
+
+@keyframes pulseStop {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.45); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 68, 68, 0); }
 }
 
 /* ==========================================================================
@@ -1510,6 +1582,56 @@ button:focus-visible {
 
 .form-button-danger:hover {
   background: rgba(255, 68, 68, 0.08);
+}
+
+.form-confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(255, 68, 68, 0.08);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  border-radius: 8px;
+}
+
+.form-confirm-icon {
+  color: var(--error);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.form-confirm-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-confirm-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.form-confirm-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.form-confirm-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.form-confirm-actions .form-button {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
 }
 
 /* Range Labels */
