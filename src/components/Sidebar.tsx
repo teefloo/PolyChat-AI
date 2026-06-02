@@ -223,8 +223,26 @@ export function Sidebar({
                         </div>
                       ) : (
                         <>
-                          <div className="sidebar-session-title">{session.title}</div>
-                          <div className="sidebar-session-model">{session.windows[0]?.modelName || 'Modèle non défini'}</div>
+                          <div className="sidebar-session-title">
+                            {session.title}
+                            <span
+                              className="sidebar-window-dots"
+                              aria-label={`${session.windowCount} fenêtre${session.windowCount > 1 ? 's' : ''} ouverte${session.windowCount > 1 ? 's' : ''}`}
+                              title={`${session.windowCount} fenêtre${session.windowCount > 1 ? 's' : ''}`}
+                            >
+                              {Array.from({ length: session.windowCount }, (_, i) => (
+                                <span key={i} className="sidebar-window-dot" />
+                              ))}
+                            </span>
+                          </div>
+                          <div className="sidebar-session-model">
+                            {session.windows.slice(0, session.windowCount).map((w, i) => (
+                              <span key={w.id} className="sidebar-session-model-item">
+                                {i > 0 && ' · '}
+                                {w.modelName || 'Sans modèle'}
+                              </span>
+                            ))}
+                          </div>
                         </>
                       )}
                     </div>

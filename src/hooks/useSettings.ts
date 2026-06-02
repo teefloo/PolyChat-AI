@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware';
 import type { Settings } from '../types/index';
+import { obfuscate, deobfuscate, isObfuscated } from '../services/crypto';
 
 interface SettingsStore extends Settings {
   isSettingsOpen: boolean;
@@ -14,6 +15,36 @@ interface SettingsStore extends Settings {
   toggleSettings: () => void;
   closeSettings: () => void;
 }
+
+const obfuscatedStorage: StateStorage = {
+  getItem: (name) => {
+    const raw = localStorage.getItem(name);
+    if (!raw) return null;
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed?.state?.apiKey && isObfuscated(parsed.state.apiKey)) {
+        parsed.state.apiKey = deobfuscate(parsed.state.apiKey);
+      }
+      return JSON.stringify(parsed);
+    } catch {
+      return raw;
+    }
+  },
+  setItem: (name, value) => {
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed?.state?.apiKey) {
+        parsed.state.apiKey = obfuscate(parsed.state.apiKey);
+      }
+      localStorage.setItem(name, JSON.stringify(parsed));
+    } catch {
+      localStorage.setItem(name, value);
+    }
+  },
+  removeItem: (name) => {
+    localStorage.removeItem(name);
+  },
+};
 
 export const useSettings = create<SettingsStore>()(
   persist(
@@ -38,6 +69,16 @@ export const useSettings = create<SettingsStore>()(
     }),
     {
       name: 'polychat-settings',
+      storage: createJSONStorage(() => obfuscatedStorage),
+      partialize: (state) => ({
+        apiKey: state.apiKey,
+        selectedModel: state.selectedModel,
+        theme: state.theme,
+        systemPrompt: state.systemPrompt,
+        temperature: state.temperature,
+        maxTokens: state.maxTokens,
+      }),
     }
   )
 );
+

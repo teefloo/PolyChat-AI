@@ -1,48 +1,40 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { KeyRound, Settings } from 'lucide-react';
+import { Agentation } from 'agentation';
+import type { Message, Model } from './types/index';
+import { useSettings } from './hooks/useSettings';
+import { useChatStore } from './hooks/useChatStore';
+import { streamAIResponse, fetchModels } from './services/openRouter';
 import { Sidebar } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
 import { ChatColumn } from './components/ChatColumn';
-import { ChatInput } from './components/ChatInput';
 import { SettingsModal } from './components/SettingsModal';
-import { useSettings } from './hooks/useSettings';
-import { useChatContext } from './context/chatContext';
-import type { Message } from './types/index';
-import {
-  getSessions,
-  subscribe,
-  initializeChat,
-  createSession,
-  deleteSession,
-  renameSession,
-  updateWindowModel,
-  addMessage,
-  updateMessage,
-  setSessionLoading,
-  setSessionError,
-  getSession,
-  removeMessage,
-} from './hooks/chatStore';
-import { streamAIResponse, fetchModels } from './services/openRouter';
-import type { ChatSession, Model } from './types/index';
-import { ChatContext, type ChatContextValue } from './context/chatContext';
-import { KeyRound, Settings } from 'lucide-react';
-import { Agentation } from 'agentation';
 
-function ChatProviderInner({ children }: { children: React.ReactNode }) {
+function AppContent() {
   const { apiKey, selectedModel } = useSettings();
-  const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [activeSessionIds, setActiveSessionIds] = useState<string[]>([]);
-  const [focusedColumn, setFocusedColumn] = useState(0);
+  const sessions = useChatStore((s) => s.sessions);
+  const activeSessionId = useChatStore((s) => s.activeSessionId);
+  const focusedWindowId = useChatStore((s) => s.focusedWindowId);
+  const setActiveSessionId = useChatStore((s) => s.setActiveSessionId);
+  const setFocusedWindowId = useChatStore((s) => s.setFocusedWindowId);
+  const createSession = useChatStore((s) => s.createSession);
+  const deleteSession = useChatStore((s) => s.deleteSession);
+  const renameSession = useChatStore((s) => s.renameSession);
+  const setWindowCount = useChatStore((s) => s.setWindowCount);
+  const hideWindow = useChatStore((s) => s.hideWindow);
+  const updateWindowModel = useChatStore((s) => s.updateWindowModel);
+  const addMessage = useChatStore((s) => s.addMessage);
+  const removeMessage = useChatStore((s) => s.removeMessage);
+  const setWindowLoading = useChatStore((s) => s.setWindowLoading);
+  const setWindowError = useChatStore((s) => s.setWindowError);
+
   const [models, setModels] = useState<Model[]>([]);
-  const [windowCount, setWindowCount] = useState(1);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const abortRefs = useRef(new Map<string, AbortController>());
 
-  useEffect(() => {
-    initializeChat();
-    setSessions(getSessions());
-    const unsub = subscribe(() => setSessions(getSessions()));
-    return unsub;
-  }, []);
+  const activeSession = activeSessionId
+    ? sessions.find((s) => s.id === activeSessionId)
+    : undefined;
 
   useEffect(() => {
     if (!apiKey) {
@@ -50,72 +42,78 @@ function ChatProviderInner({ children }: { children: React.ReactNode }) {
       return;
     }
     fetchModels(apiKey)
-      .then((m) => {
-        const parsed = m.map((item) => ({
-          id: item.id,
-          name: item.name,
-          context_length: item.context_length,
-        }));
-        setModels(parsed);
-        if (!selectedModel && parsed.length > 0) {
-          useSettings.getState().setSelectedModel(parsed[0].id);
+      .then((models) => {
+        setModels(models);
+        if (!selectedModel && models.length > 0) {
+          useSettings.getState().setSelectedModel(models[0].id);
         }
       })
       .catch(() => setModels([]));
   }, [apiKey, selectedModel]);
 
   useEffect(() => {
-    if (sessions.length === 0 && activeSessionIds.length === 0 && apiKey && models.length > 0) {
+    if (sessions.length === 0 && apiKey && models.length > 0) {
       const modelId = selectedModel || models[0]?.id || '';
       const modelName = models.find((m) => m.id === modelId)?.name || modelId;
-      const session = createSession([{ modelId, modelName }]);
-      setActiveSessionIds([session.id]);
+      createSession(modelId, modelName);
+    } else if (sessions.length > 0 && !activeSessionId) {
+      setActiveSessionId(sessions[0].id);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessions.length, apiKey, models.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessions.length, apiKey, models.length, selectedModel, activeSessionId, createSession, setActiveSessionId, sessions]);
 
   const createNewSession = useCallback(() => {
     const modelId = selectedModel || models[0]?.id || '';
     const modelName = models.find((m) => m.id === modelId)?.name || modelId;
-    const session = createSession([{ modelId, modelName }]);
-    setActiveSessionIds((prev) => {
-      const next = [...prev];
-      next[focusedColumn] = session.id;
-      return next;
-    });
-  }, [selectedModel, models, focusedColumn]);
+    createSession(modelId, modelName);
+  }, [selectedModel, models, createSession]);
 
-  const selectSession = useCallback((id: string) => {
-    setActiveSessionIds((prev) => {
-      const next = [...prev];
-      next[focusedColumn] = id;
-      return next;
-    });
-  }, [focusedColumn]);
-
-  const deleteSessionById = useCallback((id: string) => {
-    deleteSession(id);
-    setActiveSessionIds((prev) => prev.map((sid) => (sid === id ? '' : sid)));
-  }, []);
-
-  const updateWindowModelById = useCallback(
-    (columnIndex: number, modelId: string, modelName: string) => {
-      const sessionId = activeSessionIds[columnIndex];
-      if (!sessionId) return;
-      updateWindowModel(sessionId, columnIndex, modelId, modelName);
+  const selectSession = useCallback(
+    (id: string) => {
+      setActiveSessionId(id);
     },
-    [activeSessionIds]
+    [setActiveSessionId]
+  );
+
+  const deleteSessionById = useCallback(
+    (id: string) => {
+      deleteSession(id);
+    },
+    [deleteSession]
+  );
+
+  const changeWindowCount = useCallback(
+    (count: 1 | 2 | 3) => {
+      if (!activeSessionId) return;
+      setWindowCount(activeSessionId, count);
+    },
+    [activeSessionId, setWindowCount]
+  );
+
+  const closeWindow = useCallback(
+    (windowId: string) => {
+      if (!activeSession || !activeSessionId) return;
+      if (activeSession.windowCount <= 1) return;
+      hideWindow(activeSessionId, windowId);
+    },
+    [activeSession, activeSessionId, hideWindow]
+  );
+
+  const updateColumnModel = useCallback(
+    (windowId: string, modelId: string, modelName: string) => {
+      if (!activeSessionId) return;
+      updateWindowModel(activeSessionId, windowId, modelId, modelName);
+    },
+    [activeSessionId, updateWindowModel]
   );
 
   const sendMessage = useCallback(
-    (content: string, columnIndex: number) => {
-      const sessionId = activeSessionIds[columnIndex];
-      if (!sessionId || !apiKey) return;
-      const session = getSession(sessionId);
+    (content: string, windowId: string) => {
+      if (!activeSessionId || !apiKey) return;
+      const session = useChatStore.getState().getSession(activeSessionId);
       if (!session) return;
-
-      const windowConfig = session.windows[columnIndex] || session.windows[0];
-      const modelId = windowConfig.modelId;
+      const win = session.windows.find((w) => w.id === windowId);
+      if (!win || !win.modelId) return;
 
       const userMsg: Message = {
         id: crypto.randomUUID(),
@@ -123,7 +121,7 @@ function ChatProviderInner({ children }: { children: React.ReactNode }) {
         content,
         timestamp: new Date(),
       };
-      addMessage(sessionId, userMsg);
+      addMessage(activeSessionId, windowId, userMsg);
 
       const assistantMsgId = crypto.randomUUID();
       const assistantMsg: Message = {
@@ -131,27 +129,29 @@ function ChatProviderInner({ children }: { children: React.ReactNode }) {
         role: 'assistant',
         content: '',
         timestamp: new Date(),
-        modelId,
+        modelId: win.modelId,
         streaming: true,
       };
-      addMessage(sessionId, assistantMsg);
-      setSessionLoading(sessionId, true);
-      setSessionError(sessionId, null);
+      addMessage(activeSessionId, windowId, assistantMsg);
+      setWindowLoading(activeSessionId, windowId, true);
+      setWindowError(activeSessionId, windowId, null);
 
       const controller = new AbortController();
-      abortRefs.current.set(sessionId, controller);
+      abortRefs.current.set(`${activeSessionId}:${windowId}`, controller);
 
       const settings = useSettings.getState();
 
       streamAIResponse(
-        [...session.messages, userMsg],
+        [...win.messages, userMsg],
         apiKey,
-        modelId,
+        win.modelId,
         (delta) => {
-          const current = getSession(sessionId);
+          const current = useChatStore.getState().getWindow(activeSessionId, windowId);
           const msg = current?.messages.find((m) => m.id === assistantMsgId);
           if (msg) {
-            updateMessage(sessionId, assistantMsgId, msg.content + delta);
+            useChatStore
+              .getState()
+              .updateMessage(activeSessionId, windowId, assistantMsgId, msg.content + delta);
           }
         },
         settings.systemPrompt || undefined,
@@ -162,93 +162,50 @@ function ChatProviderInner({ children }: { children: React.ReactNode }) {
         .then(() => {})
         .catch((err) => {
           if (!controller.signal.aborted) {
-            setSessionError(sessionId, err.message);
+            useChatStore.getState().setWindowError(activeSessionId, windowId, err.message);
           }
         })
         .finally(() => {
-          setSessionLoading(sessionId, false);
-          abortRefs.current.delete(sessionId);
+          useChatStore
+            .getState()
+            .setWindowLoading(activeSessionId, windowId, false);
+          abortRefs.current.delete(`${activeSessionId}:${windowId}`);
         });
     },
-    [activeSessionIds, apiKey]
+    [activeSessionId, apiKey, addMessage, setWindowLoading, setWindowError]
   );
 
   const deleteMessage = useCallback(
     (messageId: string) => {
-      const sessionId = activeSessionIds[focusedColumn];
-      if (!sessionId) return;
-      removeMessage(sessionId, messageId);
+      if (!activeSessionId || !focusedWindowId) return;
+      removeMessage(activeSessionId, focusedWindowId, messageId);
     },
-    [activeSessionIds, focusedColumn]
+    [activeSessionId, focusedWindowId, removeMessage]
   );
 
   const regenerate = useCallback(
-    (columnIndex: number) => {
-      const sessionId = activeSessionIds[columnIndex];
-      if (!sessionId) return;
-      const session = getSession(sessionId);
-      if (!session || session.messages.length < 2) return;
-      const lastUserMsg = [...session.messages].reverse().find((m) => m.role === 'user');
+    (windowId: string) => {
+      if (!activeSessionId) return;
+      const win = useChatStore.getState().getWindow(activeSessionId, windowId);
+      if (!win || win.messages.length < 2) return;
+      const lastUserMsg = [...win.messages].reverse().find((m) => m.role === 'user');
       if (!lastUserMsg) return;
-      const lastAssistantMsg = [...session.messages].reverse().find((m) => m.role === 'assistant');
+      const lastAssistantMsg = [...win.messages].reverse().find((m) => m.role === 'assistant');
       if (lastAssistantMsg) {
-        removeMessage(sessionId, lastAssistantMsg.id);
+        useChatStore
+          .getState()
+          .removeMessage(activeSessionId, windowId, lastAssistantMsg.id);
       }
-      sendMessage(lastUserMsg.content, columnIndex);
+      sendMessage(lastUserMsg.content, windowId);
     },
-    [activeSessionIds, sendMessage]
+    [activeSessionId, sendMessage]
   );
 
-  const value: ChatContextValue = {
-    sessions,
-    activeSessionIds,
-    focusedColumn,
-    setFocusedColumn,
-    models,
-    windowCount,
-    setWindowCount,
-    createNewSession,
-    selectSession,
-    deleteSessionById,
-    renameSessionById: renameSession,
-    updateWindowModel: updateWindowModelById,
-    sendMessage,
-    deleteMessage,
-    regenerate,
-  };
-
-  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
-}
-
-function AppContent() {
-  const {
-    sessions,
-    activeSessionIds,
-    focusedColumn,
-    setFocusedColumn,
-    models,
-    windowCount,
-    setWindowCount,
-    createNewSession,
-    selectSession,
-    deleteSessionById,
-    renameSessionById,
-    updateWindowModel,
-    sendMessage,
-    deleteMessage,
-    regenerate,
-  } = useChatContext();
-
-  const { theme, isSettingsOpen, toggleSettings, apiKey } = useSettings();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { theme, isSettingsOpen, toggleSettings } = useSettings();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
-
-  const focusedSession = activeSessionIds[focusedColumn]
-    ? sessions.find((s: ChatSession) => s.id === activeSessionIds[focusedColumn])
-    : undefined;
 
   if (!apiKey) {
     return (
@@ -259,21 +216,22 @@ function AppContent() {
         <div className="grid-bg" />
         <Sidebar
           sessions={sessions}
-          activeSessionId={null}
+          activeSessionId={activeSessionId}
           onSelectSession={selectSession}
           onNewSession={createNewSession}
           onDeleteSession={deleteSessionById}
-          onRenameSession={renameSessionById}
+          onRenameSession={renameSession}
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
         />
-      <div className="main" id="main-content" role="main">
-        <TopBar
-          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          onSettings={toggleSettings}
-          isSidebarOpen={isSidebarOpen}
-        />
-        <div className="empty-state">
+        <div className="main" id="main-content" role="main">
+          <TopBar
+            onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            onSettings={toggleSettings}
+            isSidebarOpen={isSidebarOpen}
+            activeSessionTitle={activeSession?.title}
+          />
+          <div className="empty-state">
             <div className="empty-state-icon">
               <KeyRound size={48} />
             </div>
@@ -292,6 +250,9 @@ function AppContent() {
     );
   }
 
+  const visibleWindows = activeSession ? activeSession.windows.slice(0, activeSession.windowCount) : [];
+  const windowCount = activeSession?.windowCount ?? 1;
+
   return (
     <div className="app">
       <a href="#main-content" className="skip-link">
@@ -300,11 +261,11 @@ function AppContent() {
       <div className="grid-bg" />
       <Sidebar
         sessions={sessions}
-        activeSessionId={activeSessionIds[focusedColumn] || null}
+        activeSessionId={activeSessionId}
         onSelectSession={selectSession}
         onNewSession={createNewSession}
         onDeleteSession={deleteSessionById}
-        onRenameSession={renameSessionById}
+        onRenameSession={renameSession}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
@@ -313,63 +274,49 @@ function AppContent() {
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onSettings={toggleSettings}
           isSidebarOpen={isSidebarOpen}
-          activeSessionTitle={focusedSession?.title}
+          activeSessionTitle={activeSession?.title}
         />
-        <div className="window-bar" role="toolbar" aria-label="Nombre de colonnes de conversation">
-          <span className="window-bar-label">Colonnes</span>
+        <div className="window-bar" role="toolbar" aria-label="Fenêtres de la page active">
+          <span className="window-bar-label">Fenêtres</span>
           {[1, 2, 3].map((n) => (
             <button
               key={n}
-              onClick={() => setWindowCount(n)}
+              onClick={() => changeWindowCount(n as 1 | 2 | 3)}
               className={`window-bar-btn ${windowCount === n ? 'active' : ''}`}
-              aria-label={`${n} colonne${n > 1 ? 's' : ''}`}
+              aria-label={`${n} fenêtre${n > 1 ? 's' : ''}`}
               aria-pressed={windowCount === n}
             >
               {n}
             </button>
           ))}
-          <button className="window-bar-new" onClick={createNewSession} aria-label="Nouvelle conversation">
-            Nouveau
+          <button
+            className="window-bar-new"
+            onClick={createNewSession}
+            aria-label="Nouvelle page"
+            title="Créer une nouvelle page dans l'historique"
+          >
+            Nouvelle page
           </button>
         </div>
         <div className="chat-columns">
-          {Array.from({ length: windowCount }, (_, i) => {
-            const sessionId = activeSessionIds[i];
-            const session = sessionId ? sessions.find((s) => s.id === sessionId) : undefined;
-            const windowConfig = session?.windows[i];
-            return (
-              <ChatColumn
-                key={sessionId ? `${sessionId}-${i}` : `empty-${i}`}
-                session={session}
-                columnIndex={i}
-                windowConfig={windowConfig}
-                isFocused={focusedColumn === i}
-                onFocus={() => setFocusedColumn(i)}
-                models={models}
-                onUpdateModel={(modelId, modelName) => updateWindowModel(i, modelId, modelName)}
-                onSendMessage={(content) => sendMessage(content, i)}
-                onDeleteMessage={deleteMessage}
-                onRegenerate={() => regenerate(i)}
-                onOpenSettings={toggleSettings}
-                hideInput={windowCount > 1}
-              />
-            );
-          })}
-        </div>
-        {windowCount > 1 && (
-          <div className="shared-input-wrapper">
-            <div className="shared-input-label">
-              <span className="shared-input-icon">📤</span>
-              Fenêtre {focusedColumn + 1} — {focusedSession?.title || 'Nouvelle conversation'}
-            </div>
-            <ChatInput
-              onSend={(content) => sendMessage(content, focusedColumn)}
-              isLoading={focusedSession?.isLoading || false}
-              disabled={!focusedSession?.windows[focusedColumn]?.modelId}
-              placeholder="Envoyer un message à la fenêtre active... (⌘K pour focus)"
+          {visibleWindows.map((win, i) => (
+            <ChatColumn
+              key={win.id}
+              window={win}
+              windowIndex={i}
+              isFocused={focusedWindowId === win.id}
+              canClose={windowCount > 1}
+              onFocus={() => setFocusedWindowId(win.id)}
+              models={models}
+              onUpdateModel={(modelId, modelName) => updateColumnModel(win.id, modelId, modelName)}
+              onSendMessage={(content) => sendMessage(content, win.id)}
+              onDeleteMessage={deleteMessage}
+              onRegenerate={() => regenerate(win.id)}
+              onOpenSettings={toggleSettings}
+              onCloseWindow={() => closeWindow(win.id)}
             />
-          </div>
-        )}
+          ))}
+        </div>
       </div>
       <SettingsModal isOpen={isSettingsOpen} onClose={toggleSettings} models={models} />
     </div>
@@ -378,10 +325,10 @@ function AppContent() {
 
 function App() {
   return (
-    <ChatProviderInner>
+    <>
       <AppContent />
-      {process.env.NODE_ENV === 'development' && <Agentation />}
-    </ChatProviderInner>
+      {import.meta.env.DEV && <Agentation />}
+    </>
   );
 }
 

@@ -23,18 +23,20 @@ export interface Settings {
   maxTokens: number;
 }
 
-export interface WindowConfig {
+export interface PageWindow {
+  id: string;
   modelId: string;
   modelName: string;
+  messages: Message[];
+  isLoading: boolean;
+  error: string | null;
 }
 
 export interface ChatSession {
   id: string;
   title: string;
-  messages: Message[];
-  windows: WindowConfig[];
-  isLoading: boolean;
-  error: string | null;
+  windows: PageWindow[];
+  windowCount: 1 | 2 | 3;
   createdAt: Date;
   updatedAt: Date;
 }

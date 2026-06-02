@@ -1,30 +1,31 @@
 import { useCallback } from 'react';
+import { X, Settings } from 'lucide-react';
 import { MessagesArea } from './MessagesArea';
 import { ChatInput } from './ChatInput';
 import { ModelSelector } from './ModelSelector';
-import { Settings } from 'lucide-react';
-import type { ChatSession, Model, WindowConfig } from '../types/index';
+import type { Model, PageWindow } from '../types/index';
 
 interface ChatColumnProps {
-  session: ChatSession | undefined;
-  columnIndex: number;
-  windowConfig: WindowConfig | undefined;
-  isFocused?: boolean;
-  onFocus?: () => void;
+  window: PageWindow | undefined;
+  windowIndex: number;
+  isFocused: boolean;
+  canClose: boolean;
+  onFocus: () => void;
   models: Model[];
   onUpdateModel: (modelId: string, modelName: string) => void;
   onSendMessage: (content: string) => void;
   onDeleteMessage: (messageId: string) => void;
   onRegenerate: () => void;
   onOpenSettings: () => void;
+  onCloseWindow: () => void;
   hideInput?: boolean;
 }
 
 export function ChatColumn({
-  session,
-  columnIndex: _columnIndex,
-  windowConfig,
+  window,
+  windowIndex,
   isFocused,
+  canClose,
   onFocus,
   models,
   onUpdateModel,
@@ -32,6 +33,7 @@ export function ChatColumn({
   onDeleteMessage,
   onRegenerate,
   onOpenSettings,
+  onCloseWindow,
   hideInput = false,
 }: ChatColumnProps) {
   const handleSend = useCallback(
@@ -53,35 +55,51 @@ export function ChatColumn({
   }, [onRegenerate]);
 
   const handleRetry = useCallback(() => {
-    if (!session) return;
-    const lastUserMsg = [...session.messages].reverse().find((m) => m.role === 'user');
+    if (!window) return;
+    const lastUserMsg = [...window.messages].reverse().find((m) => m.role === 'user');
     if (lastUserMsg) {
       onSendMessage(lastUserMsg.content);
     }
-  }, [session, onSendMessage]);
+  }, [window, onSendMessage]);
 
-  if (!session) {
+  if (!window) {
     return (
-      <div className="chat-column">
+      <div className={`chat-column${isFocused ? ' focused' : ''}`} onClick={onFocus}>
         <div className="messages-empty">
-          <div className="messages-empty-title">Aucune session</div>
+          <div className="messages-empty-title">Aucune fenêtre</div>
         </div>
       </div>
     );
   }
 
-  if (!windowConfig?.modelId) {
+  if (!window.modelId) {
     return (
-      <div className="chat-column">
+      <div className={`chat-column${isFocused ? ' focused' : ''}`} onClick={onFocus}>
         <div className="column-header">
-          <ModelSelector
-            models={models}
-            selectedModel=""
-            onSelect={(modelId) => {
-              const model = models.find((m) => m.id === modelId);
-              onUpdateModel(modelId, model?.name || modelId);
-            }}
-          />
+          <div className="column-header-left">
+            <span className="column-header-index">Fenêtre {windowIndex + 1}</span>
+            <ModelSelector
+              models={models}
+              selectedModel=""
+              onSelect={(modelId) => {
+                const model = models.find((m) => m.id === modelId);
+                onUpdateModel(modelId, model?.name || modelId);
+              }}
+            />
+          </div>
+          {canClose && (
+            <button
+              className="column-action-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCloseWindow();
+              }}
+              aria-label="Fermer cette fenêtre"
+              title="Fermer cette fenêtre"
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
         <div className="messages-empty">
           <Settings className="messages-empty-icon" />
@@ -100,19 +118,35 @@ export function ChatColumn({
   return (
     <div className={`chat-column${isFocused ? ' focused' : ''}`} onClick={onFocus}>
       <div className="column-header">
-        <ModelSelector
-          models={models}
-          selectedModel={windowConfig.modelId}
-          onSelect={(modelId) => {
-            const model = models.find((m) => m.id === modelId);
-            onUpdateModel(modelId, model?.name || modelId);
-          }}
-        />
+        <div className="column-header-left">
+          <span className="column-header-index">Fenêtre {windowIndex + 1}</span>
+          <ModelSelector
+            models={models}
+            selectedModel={window.modelId}
+            onSelect={(modelId) => {
+              const model = models.find((m) => m.id === modelId);
+              onUpdateModel(modelId, model?.name || modelId);
+            }}
+          />
+        </div>
+        {canClose && (
+          <button
+            className="column-action-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onCloseWindow();
+            }}
+            aria-label="Fermer cette fenêtre"
+            title="Fermer cette fenêtre"
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
       <MessagesArea
-        messages={session.messages}
-        isLoading={session.isLoading}
-        error={session.error}
+        messages={window.messages}
+        isLoading={window.isLoading}
+        error={window.error}
         onDeleteMessage={handleDeleteMessage}
         onRegenerate={handleRegenerate}
         onRetry={handleRetry}
@@ -120,8 +154,9 @@ export function ChatColumn({
       {!hideInput && (
         <ChatInput
           onSend={handleSend}
-          isLoading={session.isLoading}
-          disabled={!windowConfig.modelId}
+          isLoading={window.isLoading}
+          disabled={!window.modelId}
+          placeholder="Envoyer un message... (⌘K pour focus)"
         />
       )}
     </div>
