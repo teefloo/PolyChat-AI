@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { X, Sun, Moon, Trash2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { X, Sun, Moon, Trash2, AlertTriangle } from 'lucide-react';
 import { useSettings } from '../hooks/useSettings';
 import type { Model } from '../types/index';
 
@@ -34,25 +34,70 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
   } = useSettings();
 
   const overlayRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const apiKeyRef = useRef<HTMLInputElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [confirmingClear, setConfirmingClear] = useState(false);
 
   useEffect(() => {
-    function handleEscape(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
+    if (!isOpen) {
+      setConfirmingClear(false);
+      return;
     }
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      // Auto-focus API key input if empty
-      if (!apiKey) {
-        setTimeout(() => apiKeyRef.current?.focus(), 100);
+
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+
+    const focusTimer = window.setTimeout(() => {
+      if (!apiKey && apiKeyRef.current) {
+        apiKeyRef.current.focus();
+      } else {
+        closeButtonRef.current?.focus();
       }
-      return () => document.removeEventListener('keydown', handleEscape);
+    }, 50);
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        if (confirmingClear) {
+          setConfirmingClear(false);
+        } else {
+          onClose();
+        }
+        return;
+      }
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusables = modalRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
-  }, [isOpen, onClose, apiKey]);
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+      previousFocusRef.current?.focus?.();
+    };
+  }, [isOpen, onClose, apiKey, confirmingClear]);
 
   if (!isOpen) return null;
 
   const selectedModelData = models.find((m) => m.id === selectedModel);
+  const titleId = 'settings-modal-title';
 
   return (
     <div
@@ -62,11 +107,25 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
         if (e.target === overlayRef.current) onClose();
       }}
     >
-      <div className="modal">
+      <div
+        className="modal"
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
         <div className="modal-header">
-          <h2 className="modal-title">Paramètres</h2>
-          <button className="modal-close" onClick={onClose} title="Fermer (Échap)">
-            <X size={18} />
+          <h2 id={titleId} className="modal-title">
+            Paramètres
+          </h2>
+          <button
+            ref={closeButtonRef}
+            className="modal-close"
+            onClick={onClose}
+            aria-label="Fermer la fenêtre des paramètres"
+            title="Fermer (Échap)"
+          >
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
         <div className="modal-body">
@@ -84,6 +143,7 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               autoComplete="off"
+              spellCheck={false}
             />
             <span className="form-hint">
               Obtenez votre clé sur{' '}
@@ -126,7 +186,9 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
           <div className="form-group">
             <label className="form-label" htmlFor="temperature">
               Température{' '}
-              <span className="form-range-value">{temperature.toFixed(1)}</span>
+              <span className="form-range-value" aria-hidden="true">
+                {temperature.toFixed(1)}
+              </span>
             </label>
             <input
               id="temperature"
@@ -137,8 +199,12 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
               step="0.1"
               value={temperature}
               onChange={(e) => setTemperature(parseFloat(e.target.value))}
+              aria-valuemin={0}
+              aria-valuemax={2}
+              aria-valuenow={temperature}
+              aria-valuetext={`${temperature.toFixed(1)} — ${temperature < 0.5 ? 'très déterministe' : temperature < 1 ? 'équilibré' : temperature < 1.5 ? 'créatif' : 'très créatif'}`}
             />
-            <div className="form-range-labels">
+            <div className="form-range-labels" aria-hidden="true">
               <span>0 — Déterministe</span>
               <span>2 — Créatif</span>
             </div>
@@ -148,8 +214,12 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
           <div className="form-group">
             <label className="form-label" htmlFor="max-tokens">
               Tokens maximum{' '}
-              <span className="form-range-value">{maxTokens.toLocaleString()}</span>
-              <span className="form-range-badge">{getTokenLabel(maxTokens)}</span>
+              <span className="form-range-value" aria-hidden="true">
+                {maxTokens.toLocaleString()}
+              </span>
+              <span className="form-range-badge" aria-hidden="true">
+                {getTokenLabel(maxTokens)}
+              </span>
             </label>
             <input
               id="max-tokens"
@@ -160,8 +230,12 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
               step="256"
               value={maxTokens}
               onChange={(e) => setMaxTokens(parseInt(e.target.value))}
+              aria-valuemin={256}
+              aria-valuemax={16384}
+              aria-valuenow={maxTokens}
+              aria-valuetext={`${maxTokens.toLocaleString()} tokens (${getTokenLabel(maxTokens)})`}
             />
-            <div className="form-range-labels">
+            <div className="form-range-labels" aria-hidden="true">
               <span>256</span>
               <span>16 384</span>
             </div>
@@ -187,28 +261,68 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
 
           {/* Theme */}
           <div className="form-group">
-            <label className="form-label">Thème</label>
-            <button className="form-input form-button" onClick={toggleTheme}>
-              {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+            <span className="form-label">Thème</span>
+            <button
+              type="button"
+              className="form-input form-button"
+              onClick={toggleTheme}
+              aria-pressed={theme === 'dark'}
+              aria-label={`Activer le thème ${theme === 'dark' ? 'clair' : 'sombre'}`}
+            >
+              {theme === 'dark' ? <Moon size={16} aria-hidden="true" /> : <Sun size={16} aria-hidden="true" />}
               {theme === 'dark' ? 'Sombre' : 'Clair'}
             </button>
           </div>
 
           {/* Clear History */}
           <div className="form-group">
-            <label className="form-label">Données</label>
-            <button
-              className="form-input form-button form-button-danger"
-              onClick={() => {
-                if (confirm('Supprimer tout l\'historique des conversations ? Cette action est irréversible.')) {
-                  localStorage.removeItem('polychat_history');
-                  window.location.reload();
-                }
-              }}
-            >
-              <Trash2 size={16} />
-              Supprimer l'historique
-            </button>
+            <span className="form-label">Données</span>
+            {confirmingClear ? (
+              <div className="form-confirm" role="alertdialog" aria-labelledby="clear-confirm-title" aria-describedby="clear-confirm-desc">
+                <div className="form-confirm-icon" aria-hidden="true">
+                  <AlertTriangle size={18} />
+                </div>
+                <div className="form-confirm-body">
+                  <div id="clear-confirm-title" className="form-confirm-title">
+                    Supprimer tout l'historique ?
+                  </div>
+                  <div id="clear-confirm-desc" className="form-confirm-desc">
+                    Cette action est irréversible. Toutes les conversations seront supprimées.
+                  </div>
+                </div>
+                <div className="form-confirm-actions">
+                  <button
+                    type="button"
+                    className="form-input form-button form-button-danger"
+                    onClick={() => {
+                      localStorage.removeItem('polychat_history');
+                      window.location.reload();
+                    }}
+                    autoFocus
+                  >
+                    <Trash2 size={16} aria-hidden="true" />
+                    Supprimer
+                  </button>
+                  <button
+                    type="button"
+                    className="form-input form-button"
+                    onClick={() => setConfirmingClear(false)}
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="form-input form-button form-button-danger"
+                onClick={() => setConfirmingClear(true)}
+                aria-label="Supprimer tout l'historique des conversations"
+              >
+                <Trash2 size={16} aria-hidden="true" />
+                Supprimer l'historique
+              </button>
+            )}
           </div>
         </div>
       </div>
