@@ -115,9 +115,12 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
         aria-labelledby={titleId}
       >
         <div className="modal-header">
-          <h2 id={titleId} className="modal-title">
-            Paramètres
-          </h2>
+          <div>
+            <span className="modal-eyebrow">№ 002 — Paramètres</span>
+            <h2 id={titleId} className="modal-title">
+              Régler <em>la presse.</em>
+            </h2>
+          </div>
           <button
             ref={closeButtonRef}
             className="modal-close"

@@ -1,34 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <defs>
-    <linearGradient id="grad-c2i" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#06B6D4;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <!-- Icon only -->
-  <g id="icon-c2i" transform="translate(2, 2)">
-    <polygon points="30,2 55,15 55,43 30,56 5,43 5,15" 
-             fill="none" 
-             stroke="url(#grad-c2i)" 
-             stroke-width="2.5" />
-    <polygon points="30,12 45,20 45,38 30,46 15,38 15,20" 
-             fill="url(#grad-c2i)" 
-             opacity="0.15" />
-    <text x="30" y="35" 
-          font-family="'Inter', system-ui, sans-serif" 
-          font-size="16" 
-          font-weight="700" 
-          fill="#3B82F6"
-          text-anchor="middle">
-      AI
-    </text>
-    <circle cx="30" cy="2" r="3" fill="#06B6D4" />
-    <circle cx="55" cy="15" r="3" fill="#3B82F6" />
-    <circle cx="55" cy="43" r="3" fill="#6366F1" />
-    <circle cx="30" cy="56" r="3" fill="#8B5CF6" />
-    <circle cx="5" cy="43" r="3" fill="#A855F7" />
-    <circle cx="5" cy="15" r="3" fill="#06B6D4" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="pc2-icon-title">
+  <title id="pc2-icon-title">PolyChat</title>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M26,12 L34,20 L26,28" stroke="#14110d" stroke-width="2.5"/>
+    <path d="M30,22 L40,32 L30,42" stroke="#7a1f1f" stroke-width="3"/>
+    <path d="M26,36 L34,44 L26,52" stroke="#14110d" stroke-width="2.5"/>
   </g>
+  <line x1="20" y1="58" x2="44" y2="58" stroke="#14110d" stroke-width="1" opacity="0.28"/>
 </svg>

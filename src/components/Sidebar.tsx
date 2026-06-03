@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Search, Plus, MessageSquare, Trash2, Pencil, Check, X, MoreHorizontal } from 'lucide-react';
+import { Search, MessageSquare, Trash2, Pencil, Check, X, MoreHorizontal } from 'lucide-react';
 import type { ChatSession } from '../types/index';
 
 interface SidebarProps {
@@ -110,6 +110,7 @@ export function Sidebar({
           <div className="sidebar-brand">
             <img src="/logos/polychat-logo-concept1-icon.svg" alt="" className="sidebar-brand-icon" />
             <span className="sidebar-brand-name">PolyChat</span>
+            <span className="sidebar-brand-tag">№&nbsp;AI</span>
           </div>
           <div className="sidebar-search">
             <Search className="sidebar-search-icon" />
@@ -122,7 +123,6 @@ export function Sidebar({
             />
           </div>
           <button type="button" className="sidebar-new-chat" onClick={onNewSession}>
-            <Plus size={16} aria-hidden="true" />
             Nouvelle conversation
           </button>
         </div>

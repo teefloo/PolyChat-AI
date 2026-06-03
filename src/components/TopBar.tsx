@@ -5,9 +5,18 @@ interface TopBarProps {
   onSettings: () => void;
   isSidebarOpen: boolean;
   activeSessionTitle?: string;
+  issueDate?: string;
+  issueNumber?: string;
 }
 
-export function TopBar({ onToggleSidebar, onSettings, isSidebarOpen, activeSessionTitle }: TopBarProps) {
+export function TopBar({
+  onToggleSidebar,
+  onSettings,
+  isSidebarOpen,
+  activeSessionTitle,
+  issueDate,
+  issueNumber,
+}: TopBarProps) {
   return (
     <header className="topbar" role="banner">
       <div className="topbar-left">
@@ -35,6 +44,16 @@ export function TopBar({ onToggleSidebar, onSettings, isSidebarOpen, activeSessi
             />
             <span className="topbar-title">PolyChat</span>
           </>
+        )}
+        {issueDate && issueNumber && (
+          <div className="topbar-masthead" aria-label="Numéro et date du jour">
+            <span>
+              <span className="topbar-masthead-dot" aria-hidden="true" />
+              № {issueNumber}
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>{issueDate}</span>
+          </div>
         )}
         {activeSessionTitle && (
           <>

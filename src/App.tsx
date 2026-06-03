@@ -1,5 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { KeyRound, Settings } from 'lucide-react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Agentation } from 'agentation';
 import type { Message, Model } from './types/index';
 import { useSettings } from './hooks/useSettings';
@@ -8,7 +7,14 @@ import { streamAIResponse, fetchModels } from './services/openRouter';
 import { Sidebar } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
 import { ChatColumn } from './components/ChatColumn';
+import { ChatInput } from './components/ChatInput';
 import { SettingsModal } from './components/SettingsModal';
+
+function formatIssueDate(d: Date) {
+  return d
+    .toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    .replace(/^./, (c) => c.toUpperCase());
+}
 
 function AppContent() {
   const { apiKey, selectedModel } = useSettings();
@@ -31,6 +37,16 @@ function AppContent() {
   const [models, setModels] = useState<Model[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const abortRefs = useRef(new Map<string, AbortController>());
+
+  const today = useMemo(() => new Date(), []);
+  const issueDate = useMemo(() => formatIssueDate(today), [today]);
+  const issueNumber = useMemo(() => {
+    const start = new Date(today.getFullYear(), 0, 0);
+    const diff = today.getTime() - start.getTime();
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+    return String(dayOfYear).padStart(3, '0');
+  }, [today]);
 
   const activeSession = activeSessionId
     ? sessions.find((s) => s.id === activeSessionId)
@@ -130,7 +146,6 @@ function AppContent() {
         content: '',
         timestamp: new Date(),
         modelId: win.modelId,
-        streaming: true,
       };
       addMessage(activeSessionId, windowId, assistantMsg);
       setWindowLoading(activeSessionId, windowId, true);
@@ -183,6 +198,20 @@ function AppContent() {
     [activeSessionId, focusedWindowId, removeMessage]
   );
 
+  const stopAllGeneration = useCallback(() => {
+    if (!activeSessionId) return;
+    const prefix = `${activeSessionId}:`;
+    for (const [key, controller] of abortRefs.current.entries()) {
+      if (!key.startsWith(prefix)) continue;
+      controller.abort();
+      const windowId = key.slice(prefix.length);
+      setWindowLoading(activeSessionId, windowId, false);
+    }
+    for (const key of Array.from(abortRefs.current.keys())) {
+      if (key.startsWith(prefix)) abortRefs.current.delete(key);
+    }
+  }, [activeSessionId, setWindowLoading]);
+
   const stopGeneration = useCallback(
     (windowId: string) => {
       if (!activeSessionId) return;
@@ -191,10 +220,23 @@ function AppContent() {
       if (controller) {
         controller.abort();
         abortRefs.current.delete(key);
-        setWindowLoading(activeSessionId, windowId, false);
       }
+      setWindowLoading(activeSessionId, windowId, false);
     },
     [activeSessionId, setWindowLoading]
+  );
+
+  const broadcastMessage = useCallback(
+    (content: string) => {
+      if (!activeSession) return;
+      const eligible = activeSession.windows
+        .slice(0, activeSession.windowCount)
+        .filter((w) => w.modelId);
+      for (const win of eligible) {
+        sendMessage(content, win.id);
+      }
+    },
+    [activeSession, sendMessage]
   );
 
   const regenerate = useCallback(
@@ -244,28 +286,72 @@ function AppContent() {
             onSettings={toggleSettings}
             isSidebarOpen={isSidebarOpen}
             activeSessionTitle={activeSession?.title}
+            issueDate={issueDate}
+            issueNumber={issueNumber}
           />
-          <div className="empty-state">
-            <div className="empty-state-icon">
-              <KeyRound size={48} />
+          <section className="empty-state" aria-label="Bienvenue sur PolyChat">
+            <div className="empty-state-left">
+              <div className="empty-state-issue">
+                <span>№ {issueNumber}</span>
+                <span>{issueDate}</span>
+              </div>
+              <h1 className="empty-state-headline">
+                Converser <em>avec</em><br />l'intelligence.
+              </h1>
+              <p className="empty-state-drop">
+                Un atelier pour interroger plusieurs modèles en parallèle, comparer leurs voix, et composer la réponse juste.
+              </p>
+              <button type="button" className="empty-state-cta" onClick={toggleSettings}>
+                Configurer la clé
+              </button>
             </div>
-            <h2 className="empty-state-title">Bienvenue sur PolyChat</h2>
-            <p className="empty-state-text">
-              Configurez votre clé API OpenRouter pour commencer à discuter avec les modèles d'IA.
-            </p>
-            <button className="empty-state-btn" onClick={toggleSettings}>
-              <Settings size={18} />
-              Configurer la clé API
-            </button>
-          </div>
+            <div className="empty-state-right">
+              <div className="empty-state-ornament" aria-hidden="true">❦</div>
+              <div className="empty-state-specs">
+                <div className="empty-state-spec">
+                  <span className="empty-state-spec-key">Mandat</span>
+                  <span className="empty-state-spec-value">
+                    Comparer jusqu'à <em>trois modèles</em> côte à côte, dans une même fenêtre.
+                  </span>
+                </div>
+                <div className="empty-state-spec">
+                  <span className="empty-state-spec-key">Archives</span>
+                  <span className="empty-state-spec-value">
+                    Conversations conservées localement, indexées par date, <em>renommables</em> à tout moment.
+                  </span>
+                </div>
+                <div className="empty-state-spec">
+                  <span className="empty-state-spec-key">Mise en page</span>
+                  <span className="empty-state-spec-value">
+                    Marge, interlignage et ornements réglés pour une <em>lecture longue</em>.
+                  </span>
+                </div>
+              </div>
+              <p className="empty-state-colophon">
+                Composé sur papier numérique —<br />
+                sérif Fraunces · grotesk IBM Plex · mono JetBrains
+              </p>
+            </div>
+          </section>
         </div>
         <SettingsModal isOpen={isSettingsOpen} onClose={toggleSettings} models={models} />
+        <div className="paper-grain" aria-hidden="true" />
       </div>
     );
   }
 
   const visibleWindows = activeSession ? activeSession.windows.slice(0, activeSession.windowCount) : [];
   const windowCount = activeSession?.windowCount ?? 1;
+  const isAnyWindowLoading = visibleWindows.some((w) => w.isLoading);
+  const allWindowsHaveModel = visibleWindows.length > 0 && visibleWindows.every((w) => w.modelId);
+  const hasAnyVisibleUserMessage = visibleWindows.some((w) =>
+    w.messages.some((m) => m.role === 'user')
+  );
+  const showSharedInput = !hasAnyVisibleUserMessage;
+  const isSharedInputDisabled = !allWindowsHaveModel;
+  const sharedPlaceholder = visibleWindows.length > 1
+    ? `Diffuser aux ${visibleWindows.length} colonnes…  (⌘K pour focus)`
+    : 'Composer un message…  (⌘K pour focus)';
 
   return (
     <div className="app">
@@ -289,9 +375,11 @@ function AppContent() {
           onSettings={toggleSettings}
           isSidebarOpen={isSidebarOpen}
           activeSessionTitle={activeSession?.title}
+          issueDate={issueDate}
+          issueNumber={issueNumber}
         />
         <div className="window-bar" role="toolbar" aria-label="Fenêtres de la page active">
-          <span className="window-bar-label" id="window-bar-label">Colonnes</span>
+          <span className="window-bar-label" id="window-bar-label">Composition</span>
           <div className="window-bar-group" role="group" aria-labelledby="window-bar-label">
             {[1, 2, 3].map((n) => (
               <button
@@ -333,11 +421,32 @@ function AppContent() {
               onRegenerate={() => regenerate(win.id)}
               onOpenSettings={toggleSettings}
               onCloseWindow={() => closeWindow(win.id)}
+              showInput={hasAnyVisibleUserMessage}
             />
           ))}
         </div>
+        {showSharedInput && (
+          <div className="shared-input" role="region" aria-label="Saisie partagée">
+            <div className="shared-input-meta">
+              <span className="shared-input-ornament" aria-hidden="true">→</span>
+              <span className="shared-input-label">Diffusion</span>
+              <span className="shared-input-divider" aria-hidden="true">·</span>
+              <span className="shared-input-count">
+                {visibleWindows.length} colonne{visibleWindows.length > 1 ? 's' : ''}
+              </span>
+            </div>
+            <ChatInput
+              onSend={broadcastMessage}
+              onStop={stopAllGeneration}
+              isLoading={isAnyWindowLoading}
+              disabled={isSharedInputDisabled}
+              placeholder={sharedPlaceholder}
+            />
+          </div>
+        )}
       </div>
       <SettingsModal isOpen={isSettingsOpen} onClose={toggleSettings} models={models} />
+      <div className="paper-grain" aria-hidden="true" />
     </div>
   );
 }

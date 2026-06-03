@@ -76,10 +76,11 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
   if (messages.length === 0 && !isLoading && !error) {
     return (
       <div className="messages-empty">
-        <Bot className="messages-empty-icon" aria-hidden="true" />
-        <div className="messages-empty-title">Nouvelle conversation</div>
+        <div className="messages-empty-title">
+          Page <em>blanche.</em>
+        </div>
         <div className="messages-empty-text">
-          Envoyez un message pour commencer à discuter avec l'IA.
+          Posez la première question — la conversation se composera au fil de l'échange.
         </div>
         <div className="messages-empty-hints">
           <div className="messages-empty-hint">
@@ -105,13 +106,16 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
           <div className="message-avatar" aria-hidden="true">
             {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
           </div>
-          <div className="message-content" aria-live={msg.streaming ? 'polite' : 'off'}>
+          <div
+            className="message-content"
+            aria-live={isLoading && i === lastAssistantIndex ? 'polite' : 'off'}
+          >
             {msg.role === 'assistant' ? (
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
             ) : (
               msg.content
             )}
-            {msg.streaming && (
+            {isLoading && i === lastAssistantIndex && (
               <span className="streaming-dot" aria-label="En cours de rédaction" role="status" />
             )}
           </div>

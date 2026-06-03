@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { X, Settings } from 'lucide-react';
 import { MessagesArea } from './MessagesArea';
-import { ChatInput } from './ChatInput';
 import { ModelSelector } from './ModelSelector';
+import { ChatInput } from './ChatInput';
 import type { Model, PageWindow } from '../types/index';
 
 interface ChatColumnProps {
@@ -19,6 +19,7 @@ interface ChatColumnProps {
   onRegenerate: () => void;
   onOpenSettings: () => void;
   onCloseWindow: () => void;
+  showInput?: boolean;
 }
 
 export function ChatColumn({
@@ -35,14 +36,8 @@ export function ChatColumn({
   onRegenerate,
   onOpenSettings,
   onCloseWindow,
+  showInput = false,
 }: ChatColumnProps) {
-  const handleSend = useCallback(
-    (content: string) => {
-      onSendMessage(content);
-    },
-    [onSendMessage]
-  );
-
   const handleDeleteMessage = useCallback(
     (messageId: string) => {
       onDeleteMessage(messageId);
@@ -82,7 +77,7 @@ export function ChatColumn({
         <div className="column-header">
           <div className="column-header-left">
             <span className="column-header-index" aria-hidden="true">
-              Fenêtre {windowIndex + 1}
+              {windowIndex + 1}
             </span>
             <ModelSelector
               models={models}
@@ -131,7 +126,7 @@ export function ChatColumn({
       <div className="column-header">
         <div className="column-header-left">
           <span className="column-header-index" aria-hidden="true">
-            Fenêtre {windowIndex + 1}
+            {windowIndex + 1}
           </span>
           <ModelSelector
             models={models}
@@ -165,13 +160,15 @@ export function ChatColumn({
         onRegenerate={handleRegenerate}
         onRetry={handleRetry}
       />
-      <ChatInput
-        onSend={handleSend}
-        onStop={onStopGeneration}
-        isLoading={window.isLoading}
-        disabled={!window.modelId}
-        placeholder="Envoyer un message…  (⌘K pour focus)"
-      />
+      {showInput && (
+        <ChatInput
+          onSend={onSendMessage}
+          onStop={onStopGeneration}
+          isLoading={window.isLoading}
+          disabled={!window.modelId}
+          placeholder="Composer un message…  (⌘K pour focus)"
+        />
+      )}
     </section>
   );
 }

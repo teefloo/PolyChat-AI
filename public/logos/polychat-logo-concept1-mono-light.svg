@@ -1,33 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
-  <!-- Monochrome Light version (for dark backgrounds) -->
-  <g id="icon-mono-light" transform="translate(10, 10)">
-    <path d="M30,5 Q45,5 45,20 L45,35 Q45,50 30,50 L15,50 L5,58 L8,50 Q0,50 0,35 L0,20 Q0,5 15,5 Z" 
-          fill="#FFFFFF" />
-    <path d="M52,0 Q62,0 62,10 L62,20 Q62,30 52,30 L48,30 L45,34 L46,30 Q40,30 40,20 L40,10 Q40,0 50,0 Z" 
-          fill="#FFFFFF" opacity="0.8" />
-    <circle cx="58" cy="42" r="8" fill="#FFFFFF" opacity="0.7" />
-    <circle cx="22" cy="28" r="2.5" fill="#1F2937" />
-    <circle cx="52" cy="15" r="2" fill="#1F2937" />
-    <circle cx="58" cy="42" r="1.5" fill="#1F2937" />
-    <line x1="24" y1="28" x2="50" y2="15" stroke="#1F2937" stroke-width="1" opacity="0.5" />
-    <line x1="24" y1="28" x2="56" y2="42" stroke="#1F2937" stroke-width="1" opacity="0.5" />
-    <line x1="52" y1="17" x2="56" y2="40" stroke="#1F2937" stroke-width="1" opacity="0.5" />
-  </g>
-  
-  <text x="85" y="48" 
-        font-family="'Inter', 'Segoe UI', system-ui, sans-serif" 
-        font-size="36" 
-        font-weight="700" 
-        fill="#FFFFFF"
-        letter-spacing="-0.5">
-    PolyChat
-  </text>
-  <text x="85" y="68" 
-        font-family="'Inter', 'Segoe UI', system-ui, sans-serif" 
-        font-size="14" 
-        font-weight="500" 
-        fill="#FFFFFF"
-        letter-spacing="3">
-    AI
-  </text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80" role="img" aria-labelledby="pc-ml-title">
+  <title id="pc-ml-title">PolyChat</title>
+  <line x1="14" y1="22" x2="70" y2="22" stroke="#f1ebdc" stroke-width="1" opacity="0.28"/>
+  <rect x="20" y="28" width="12" height="28" fill="#f1ebdc"/>
+  <rect x="36" y="28" width="12" height="28" fill="#f1ebdc"/>
+  <rect x="52" y="28" width="12" height="28" fill="#f1ebdc"/>
+  <line x1="14" y1="62" x2="70" y2="62" stroke="#f1ebdc" stroke-width="1" opacity="0.28"/>
+  <line x1="82" y1="20" x2="82" y2="68" stroke="#f1ebdc" stroke-width="1" opacity="0.14"/>
+  <text x="92" y="50" font-family="'Fraunces', 'Iowan Old Style', 'Times New Roman', serif" font-size="38" font-weight="500" font-variation-settings="'opsz' 144, 'SOFT' 30" fill="#f1ebdc" letter-spacing="-1.2">PolyChat</text>
+  <line x1="92" y1="58" x2="312" y2="58" stroke="#f1ebdc" stroke-width="0.5" opacity="0.14"/>
+  <text x="92" y="72" font-family="'JetBrains Mono', 'IBM Plex Mono', monospace" font-size="9" font-weight="500" fill="#f1ebdc" letter-spacing="2.0">№&nbsp;AI</text>
 </svg>

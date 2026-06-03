@@ -1,54 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160" width="120" height="160">
-  <defs>
-    <linearGradient id="grad-c2v" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#06B6D4;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <!-- Icon centered -->
-  <g id="icon-c2v" transform="translate(25, 10)">
-    <polygon points="30,2 55,15 55,43 30,56 5,43 5,15" 
-             fill="none" 
-             stroke="url(#grad-c2v)" 
-             stroke-width="2.5" />
-    <polygon points="30,12 45,20 45,38 30,46 15,38 15,20" 
-             fill="url(#grad-c2v)" 
-             opacity="0.15" />
-    <text x="30" y="35" 
-          font-family="'Inter', system-ui, sans-serif" 
-          font-size="16" 
-          font-weight="700" 
-          fill="#3B82F6"
-          text-anchor="middle">
-      AI
-    </text>
-    <circle cx="30" cy="2" r="3" fill="#06B6D4" />
-    <circle cx="55" cy="15" r="3" fill="#3B82F6" />
-    <circle cx="55" cy="43" r="3" fill="#6366F1" />
-    <circle cx="30" cy="56" r="3" fill="#8B5CF6" />
-    <circle cx="5" cy="43" r="3" fill="#A855F7" />
-    <circle cx="5" cy="15" r="3" fill="#06B6D4" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200" width="160" height="200" role="img" aria-labelledby="pc2-v-title">
+  <title id="pc2-v-title">PolyChat</title>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M70,30 L84,46 L70,62" stroke="#14110d" stroke-width="3.5"/>
+    <path d="M80,52 L96,72 L80,92" stroke="#7a1f1f" stroke-width="4"/>
+    <path d="M70,82 L84,98 L70,114" stroke="#14110d" stroke-width="3.5"/>
   </g>
-  
-  <!-- Text centered below -->
-  <text x="60" y="105" 
-        font-family="'Inter', 'Segoe UI', system-ui, sans-serif" 
-        font-size="22" 
-        font-weight="700" 
-        fill="#1F2937"
-        text-anchor="middle"
-        letter-spacing="-0.5">
-    PolyChat
-  </text>
-  <text x="60" y="130" 
-        font-family="'Inter', 'Segoe UI', system-ui, sans-serif" 
-        font-size="10" 
-        font-weight="400" 
-        fill="#6B7280"
-        text-anchor="middle"
-        letter-spacing="0.5">
-    Multi-Model AI Chat
-  </text>
+  <line x1="56" y1="122" x2="104" y2="122" stroke="#14110d" stroke-width="1" opacity="0.28"/>
+  <text x="80" y="156" font-family="'Fraunces', 'Iowan Old Style', 'Times New Roman', serif" font-size="34" font-weight="500" font-variation-settings="'opsz' 144, 'SOFT' 30" fill="#14110d" text-anchor="middle" letter-spacing="-1.0">PolyChat</text>
+  <line x1="40" y1="170" x2="120" y2="170" stroke="#14110d" stroke-width="0.5" opacity="0.14"/>
+  <text x="80" y="186" font-family="'JetBrains Mono', 'IBM Plex Mono', monospace" font-size="9" font-weight="500" fill="#9a9081" text-anchor="middle" letter-spacing="2.0">№&nbsp;AI</text>
 </svg>
