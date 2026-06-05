@@ -14,6 +14,7 @@ interface SidebarProps {
   onClose: () => void;
   onOpenLegal?: (id: 'notices' | 'privacy' | 'terms' | 'cookies' | 'ai') => void;
   onOpenPrivacy?: () => void;
+  onOpenFAQ?: () => void;
 }
 
 function groupByDate(sessions: ChatSession[]) {
@@ -57,6 +58,7 @@ export function Sidebar({
   onClose,
   onOpenLegal,
   onOpenPrivacy,
+  onOpenFAQ,
 }: SidebarProps) {
   const [search, setSearch] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -303,10 +305,11 @@ export function Sidebar({
             ))
           )}
         </div>
-        {(onOpenLegal || onOpenPrivacy) && (
+        {(onOpenLegal || onOpenPrivacy || onOpenFAQ) && (
           <LegalFooter
             onOpenDocument={(id) => onOpenLegal?.(id)}
             onManageConsent={() => onOpenPrivacy?.()}
+            onOpenFAQ={onOpenFAQ}
           />
         )}
       </div>

@@ -3,6 +3,7 @@ import type { LegalDocument } from '../legal/documents';
 interface LegalFooterProps {
   onOpenDocument: (id: LegalDocument['id']) => void;
   onManageConsent: () => void;
+  onOpenFAQ?: () => void;
 }
 
 const ITEMS: Array<{ id: LegalDocument['id']; label: string }> = [
@@ -13,7 +14,11 @@ const ITEMS: Array<{ id: LegalDocument['id']; label: string }> = [
   { id: 'ai', label: 'Avertissement IA' },
 ];
 
-export function LegalFooter({ onOpenDocument, onManageConsent }: LegalFooterProps) {
+export function LegalFooter({
+  onOpenDocument,
+  onManageConsent,
+  onOpenFAQ,
+}: LegalFooterProps) {
   return (
     <footer className="legal-footer" role="contentinfo">
       <div className="legal-footer-eyebrow">Documents juridiques</div>
@@ -35,6 +40,18 @@ export function LegalFooter({ onOpenDocument, onManageConsent }: LegalFooterProp
           </span>
         ))}
       </nav>
+      {onOpenFAQ && (
+        <button
+          type="button"
+          className="legal-footer-manage"
+          onClick={onOpenFAQ}
+        >
+          <span>Questions fréquentes (FAQ)</span>
+          <span className="legal-footer-manage-arrow" aria-hidden="true">
+            →
+          </span>
+        </button>
+      )}
       <button
         type="button"
         className="legal-footer-manage"

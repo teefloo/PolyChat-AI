@@ -14,6 +14,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { LegalModal } from './components/LegalModal';
 import { ConsentGate } from './components/ConsentGate';
 import { PrivacyModal } from './components/PrivacyModal';
+import { FAQModal } from './components/FAQModal';
 import { LEGAL_DOCUMENTS, type LegalDocument } from './legal/documents';
 
 function formatIssueDate(d: Date) {
@@ -44,6 +45,7 @@ function AppContent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [legalDocId, setLegalDocId] = useState<LegalDocument['id'] | null>(null);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isFAQOpen, setIsFAQOpen] = useState(false);
   const abortRefs = useRef(new Map<string, AbortController>());
 
    const today = useMemo(() => new Date(), []);
@@ -268,6 +270,25 @@ function AppContent() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  const openLegalDoc = useCallback((id: LegalDocument['id']) => {
+    setIsFAQOpen(false);
+    setLegalDocId(id);
+  }, []);
+
+  const openPrivacyModal = useCallback(() => {
+    setIsFAQOpen(false);
+    setIsPrivacyOpen(true);
+  }, []);
+
+  const openSettingsModal = useCallback(() => {
+    setIsFAQOpen(false);
+    if (!isSettingsOpen) toggleSettings();
+  }, [isSettingsOpen, toggleSettings]);
+
+  const openFAQ = useCallback(() => {
+    setIsFAQOpen(true);
+  }, []);
+
   if (!apiKey) {
     return (
       <div className="app">
@@ -286,6 +307,7 @@ function AppContent() {
           onClose={() => setIsSidebarOpen(false)}
           onOpenLegal={setLegalDocId}
           onOpenPrivacy={() => setIsPrivacyOpen(true)}
+          onOpenFAQ={openFAQ}
         />
         <div className="main" id="main-content" role="main">
            <TopBar
@@ -360,6 +382,13 @@ function AppContent() {
             setIsPrivacyOpen(false);
             setLegalDocId(id);
           }}
+        />
+        <FAQModal
+          isOpen={isFAQOpen}
+          onClose={() => setIsFAQOpen(false)}
+          onOpenLegal={openLegalDoc}
+          onOpenPrivacy={openPrivacyModal}
+          onOpenSettings={openSettingsModal}
         />
         <div className="paper-grain" aria-hidden="true" />
       </div>
@@ -521,6 +550,13 @@ function AppContent() {
           setIsPrivacyOpen(false);
           setLegalDocId(id);
         }}
+      />
+      <FAQModal
+        isOpen={isFAQOpen}
+        onClose={() => setIsFAQOpen(false)}
+        onOpenLegal={openLegalDoc}
+        onOpenPrivacy={openPrivacyModal}
+        onOpenSettings={openSettingsModal}
       />
       <div className="paper-grain" aria-hidden="true" />
     </div>
