@@ -6,7 +6,6 @@ interface TopBarProps {
   isSidebarOpen: boolean;
   activeSessionTitle?: string;
   issueDate?: string;
-  issueNumber?: string;
 }
 
 export function TopBar({
@@ -15,7 +14,6 @@ export function TopBar({
   isSidebarOpen,
   activeSessionTitle,
   issueDate,
-  issueNumber,
 }: TopBarProps) {
   return (
     <header className="topbar" role="banner">
@@ -45,13 +43,8 @@ export function TopBar({
             <span className="topbar-title">PolyChat</span>
           </>
         )}
-        {issueDate && issueNumber && (
-          <div className="topbar-masthead" aria-label="Numéro et date du jour">
-            <span>
-              <span className="topbar-masthead-dot" aria-hidden="true" />
-              № {issueNumber}
-            </span>
-            <span aria-hidden="true">·</span>
+        {issueDate && (
+          <div className="topbar-masthead" aria-label="Date du jour">
             <span>{issueDate}</span>
           </div>
         )}

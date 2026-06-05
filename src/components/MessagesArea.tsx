@@ -76,9 +76,9 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
   if (messages.length === 0 && !isLoading && !error) {
     return (
       <div className="messages-empty">
-        <div className="messages-empty-title">
+        <h2 className="messages-empty-title">
           Page <em>blanche.</em>
-        </div>
+        </h2>
         <div className="messages-empty-text">
           Posez la première question — la conversation se composera au fil de l'échange.
         </div>

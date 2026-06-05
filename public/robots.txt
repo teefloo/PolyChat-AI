@@ -1,0 +1,135 @@
+# =====================================================================
+# PolyChat AI — robots.txt
+# Allow all major crawlers, with explicit allow for AI / LLM crawlers
+# to maximize GEO (Generative Engine Optimization) visibility.
+# =====================================================================
+
+# Default: full access
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# =====================================================================
+# Traditional search engines
+# =====================================================================
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+User-agent: Googlebot-Video
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: MSNbot-Media
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# =====================================================================
+# AI / LLM crawlers — explicitly allowed for GEO
+# (Princeton GEO research: citation in AI answers drives +40% visibility)
+# =====================================================================
+
+# OpenAI (ChatGPT search & training)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic (Claude)
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google AI (Gemini, Vertex, AI Overviews, AI training)
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Common Crawl (feeds many open LLM datasets)
+User-agent: CCBot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+User-agent: cohere-training-data-crawler
+Allow: /
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Mistral
+User-agent: MistralAI-User
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+
+# =====================================================================
+# Disallow: any well-known problematic or training-scraping bots
+# we explicitly do NOT want to train on
+# =====================================================================
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# =====================================================================
+# Sitemap
+# =====================================================================
+
+Sitemap: https://polychat-ai.vercel.app/sitemap.xml

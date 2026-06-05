@@ -1,11 +1,65 @@
 {
-  "name": "PolyChat AI",
+  "name": "PolyChat AI — Chat avec 100+ modèles d'IA",
   "short_name": "PolyChat",
-  "icons": [
-    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
-  ],
-  "theme_color": "#0f1a23",
+  "description": "Interface open source pour discuter avec plus de 100 modèles d'IA (GPT-4, Claude, Gemini, Llama) via OpenRouter. Comparez 3 modèles en parallèle.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
   "background_color": "#0f1a23",
-  "display": "standalone"
+  "theme_color": "#0f1a23",
+  "categories": ["productivity", "utilities", "developer", "education"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/logos/polychat-logo-concept1-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "PolyChat AI — interface de chat multi-modèles"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nouvelle conversation",
+      "short_name": "Nouveau chat",
+      "description": "Démarre une nouvelle conversation avec un modèle d'IA",
+      "url": "/?new=1",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "handle_links": "preferred"
 }

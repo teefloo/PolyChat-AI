@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Search, MessageSquare, Trash2, Pencil, Check, X, MoreHorizontal } from 'lucide-react';
 import type { ChatSession } from '../types/index';
+import { LegalFooter } from './LegalFooter';
 
 interface SidebarProps {
   sessions: ChatSession[];
@@ -11,6 +12,8 @@ interface SidebarProps {
   onRenameSession: (id: string, title: string) => void;
   isOpen: boolean;
   onClose: () => void;
+  onOpenLegal?: (id: 'notices' | 'privacy' | 'terms' | 'cookies' | 'ai') => void;
+  onOpenPrivacy?: () => void;
 }
 
 function groupByDate(sessions: ChatSession[]) {
@@ -52,6 +55,8 @@ export function Sidebar({
   onRenameSession,
   isOpen,
   onClose,
+  onOpenLegal,
+  onOpenPrivacy,
 }: SidebarProps) {
   const [search, setSearch] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -107,11 +112,10 @@ export function Sidebar({
       {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <div className="sidebar-brand">
-            <img src="/logos/polychat-logo-concept1-icon.svg" alt="" className="sidebar-brand-icon" />
-            <span className="sidebar-brand-name">PolyChat</span>
-            <span className="sidebar-brand-tag">№&nbsp;AI</span>
-          </div>
+           <div className="sidebar-brand">
+             <img src="/logos/polychat-logo-concept1-icon.svg" alt="" className="sidebar-brand-icon" />
+             <span className="sidebar-brand-name">PolyChat</span>
+           </div>
           <div className="sidebar-search">
             <Search className="sidebar-search-icon" />
             <input
@@ -299,6 +303,12 @@ export function Sidebar({
             ))
           )}
         </div>
+        {(onOpenLegal || onOpenPrivacy) && (
+          <LegalFooter
+            onOpenDocument={(id) => onOpenLegal?.(id)}
+            onManageConsent={() => onOpenPrivacy?.()}
+          />
+        )}
       </div>
     </>
   );

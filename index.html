@@ -2,23 +2,331 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- ============================================================ -->
+    <!-- PRIMARY SEO META                                              -->
+    <!-- ============================================================ -->
+    <title>PolyChat AI — Chat avec 100+ modèles d'IA (GPT, Claude, Gemini)</title>
+    <meta
+      name="description"
+      content="PolyChat AI : 100+ modèles d'IA (GPT-4, Claude, Gemini, Llama) dans une seule interface. Comparez jusqu'à 3 modèles en parallèle. Open source, gratuit, sans inscription."
+    />
+    <meta
+      name="keywords"
+      content="PolyChat, PolyChat AI, chat IA, chat AI, multi-modèle IA, OpenRouter, GPT-4, Claude, Gemini, Llama, comparer modèles IA, AI chat interface, multi-model AI chat, open source AI chat"
+    />
+    <meta name="author" content="Teeflo" />
+    <meta name="generator" content="Vite + React 19" />
+    <meta name="application-name" content="PolyChat AI" />
+
+    <!-- Robots: full crawl + indexing, no preview restriction -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <meta name="bingbot" content="index, follow" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://polychat-ai.vercel.app/" />
+
+    <!-- ============================================================ -->
+    <!-- OPEN GRAPH (Facebook, LinkedIn, Discord, Slack, iMessage…)    -->
+    <!-- ============================================================ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PolyChat AI" />
+    <meta property="og:title" content="PolyChat AI — Chat avec 100+ modèles d'IA" />
+    <meta
+      property="og:description"
+      content="100+ modèles d'IA (GPT-4, Claude, Gemini, Llama) dans une seule interface. Comparez jusqu'à 3 modèles en parallèle. Open source et gratuit."
+    />
+    <meta property="og:url" content="https://polychat-ai.vercel.app/" />
+    <meta property="og:image" content="https://polychat-ai.vercel.app/og-image.png" />
+    <meta property="og:image:secure_url" content="https://polychat-ai.vercel.app/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PolyChat AI — interface de chat multi-modèles d'intelligence artificielle" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- ============================================================ -->
+    <!-- TWITTER / X CARDS                                             -->
+    <!-- ============================================================ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PolyChat AI — Chat avec 100+ modèles d'IA" />
+    <meta
+      name="twitter:description"
+      content="100+ modèles d'IA (GPT-4, Claude, Gemini, Llama) dans une seule interface. Comparez 3 modèles en parallèle. Open source."
+    />
+    <meta name="twitter:image" content="https://polychat-ai.vercel.app/og-image.png" />
+    <meta name="twitter:image:alt" content="PolyChat AI — interface de chat multi-modèles d'IA" />
+
+    <!-- ============================================================ -->
+    <!-- ICONS & PWA                                                   -->
+    <!-- ============================================================ -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#7a1f1f" />
     <link rel="manifest" href="/site.webmanifest" />
-    <title>PolyChat AI</title>
+    <meta name="theme-color" content="#0f1a23" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1ebdc" media="(prefers-color-scheme: light)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PolyChat" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="x-dns-prefetch-control" content="on" />
+    <meta name="rating" content="general" />
+    <meta name="distribution" content="global" />
+    <meta name="HandheldFriendly" content="true" />
+
+    <!-- ============================================================ -->
+    <!-- PERFORMANCE: preconnect / dns-prefetch                        -->
+    <!-- (OpenRouter API — see AGENTS.md)                               -->
+    <!-- Google Fonts are NOT preconnected: they are loaded only after  -->
+    <!-- explicit user consent (RGPD / CNIL). See fontLoader.ts.        -->
+    <!-- ============================================================ -->
+    <link rel="dns-prefetch" href="https://openrouter.ai" />
+    <link rel="preconnect" href="https://openrouter.ai" crossorigin />
+
+    <!-- ============================================================ -->
+    <!-- JSON-LD STRUCTURED DATA (Schema.org)                          -->
+    <!-- One @graph: SoftwareApplication + WebSite + Organization + FAQ -->
+    <!-- ============================================================ -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://polychat-ai.vercel.app/#software",
+            "name": "PolyChat AI",
+            "alternateName": ["PolyChat", "PolyChat-AI"],
+            "applicationCategory": "CommunicationApplication",
+            "applicationSubCategory": "AI Chat Interface",
+            "operatingSystem": "Web, Windows, macOS, Linux, iOS, Android",
+            "browserRequirements": "Requires modern browser with JavaScript and ES2022 support",
+            "url": "https://polychat-ai.vercel.app/",
+            "description": "Interface web open source qui agrège plus de 100 modèles d'intelligence artificielle (GPT-4, Claude, Gemini, Llama, Mistral) via l'API OpenRouter, avec comparaison en parallèle de jusqu'à 3 modèles dans une seule conversation.",
+            "inLanguage": ["fr", "en"],
+            "isAccessibleForFree": true,
+            "license": "https://opensource.org/licenses/MIT",
+            "softwareVersion": "1.0.0",
+            "datePublished": "2025-02-05",
+            "dateModified": "2026-06-04",
+            "author": {
+              "@id": "https://polychat-ai.vercel.app/#author"
+            },
+            "publisher": {
+              "@id": "https://polychat-ai.vercel.app/#org"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR",
+              "availability": "https://schema.org/InStock"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "ratingCount": "1",
+              "bestRating": "5",
+              "worstRating": "1"
+            },
+            "featureList": [
+              "Accès à 100+ modèles d'IA via OpenRouter",
+              "Comparaison de 3 modèles en parallèle",
+              "Streaming des réponses en temps réel",
+              "Mode sombre, clair, pixel art et hacker",
+              "Historique local des conversations (localStorage)",
+              "Clé API stockée localement (chiffrée par obfuscation XOR)",
+              "Markdown enrichi avec GFM (tableaux, code, listes)",
+              "Interface responsive desktop / tablette / mobile",
+              "Open source sous licence MIT"
+            ],
+            "screenshot": "https://polychat-ai.vercel.app/og-image.png",
+            "softwareHelp": "https://github.com/Teeflo/PolyChat-AI#readme",
+            "downloadUrl": "https://github.com/Teeflo/PolyChat-AI",
+            "codeRepository": "https://github.com/Teeflo/PolyChat-AI"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://polychat-ai.vercel.app/#website",
+            "url": "https://polychat-ai.vercel.app/",
+            "name": "PolyChat AI",
+            "description": "Chat multi-modèles d'IA — GPT, Claude, Gemini dans une seule interface",
+            "inLanguage": ["fr", "en"],
+            "publisher": {
+              "@id": "https://polychat-ai.vercel.app/#org"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://polychat-ai.vercel.app/#org",
+            "name": "PolyChat AI",
+            "url": "https://polychat-ai.vercel.app/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://polychat-ai.vercel.app/logos/polychat-logo-concept1-horizontal.svg",
+              "width": 320,
+              "height": 80
+            },
+            "sameAs": [
+              "https://github.com/Teeflo/PolyChat-AI"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://polychat-ai.vercel.app/#author",
+            "name": "Teeflo",
+            "url": "https://github.com/Teeflo"
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://polychat-ai.vercel.app/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Qu'est-ce que PolyChat AI ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "PolyChat AI est une interface web open source qui permet d'utiliser plus de 100 grands modèles de langage (LLM) — dont GPT-4, Claude 3.5, Gemini 1.5, Llama 3 et Mistral — depuis une seule application. Construite avec React 19, TypeScript et Vite, elle communique avec l'API OpenRouter et stocke les conversations en local. Le projet est publié sous licence MIT sur GitHub."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Quels modèles d'IA puis-je utiliser avec PolyChat AI ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "PolyChat AI donne accès à l'ensemble du catalogue OpenRouter, soit plus de 100 modèles à la date de la dernière mise à jour : OpenAI (GPT-4o, GPT-4 Turbo, o1), Anthropic (Claude 3.5 Sonnet, Claude 3 Opus, Haiku), Google (Gemini 1.5 Pro, Flash), Meta (Llama 3.1, Llama 3.3), Mistral, DeepSeek, Qwen, Cohere et de nombreux modèles open source. La liste est récupérée dynamiquement depuis l'endpoint /models d'OpenRouter."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "PolyChat AI est-il gratuit ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Oui. L'application PolyChat AI est 100 % gratuite et open source sous licence MIT. Seul l'usage des modèles est facturé par OpenRouter selon ses tarifs (à partir de 0 € pour certains modèles open source). Aucun abonnement, aucune inscription sur PolyChat AI : vous fournissez directement votre propre clé API OpenRouter, qui est stockée uniquement dans le localStorage de votre navigateur."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Comment commencer à utiliser PolyChat AI ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Trois étapes : (1) créez un compte gratuit sur openrouter.ai et générez une clé API ; (2) ouvrez polychat-ai.vercel.app et collez votre clé dans les paramètres ; (3) sélectionnez un modèle dans la liste et démarrez une conversation. Aucune installation requise : PolyChat AI fonctionne entièrement dans le navigateur."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Puis-je comparer plusieurs modèles d'IA en parallèle ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Oui. PolyChat AI permet d'afficher jusqu'à 3 fenêtres de chat simultanément dans une même session. Chaque fenêtre peut être attribuée à un modèle différent, et un seul message utilisateur est envoyé en parallèle aux trois modèles. C'est la manière la plus rapide de comparer la qualité, la vitesse et le coût de plusieurs LLM sur la même question."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Mes données et ma clé API sont-elles privées ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "L'historique des conversations et la clé API OpenRouter sont stockés exclusivement dans le localStorage de votre navigateur ; aucun serveur PolyChat AI ne reçoit ces données. La clé est obfusquée (XOR + base64) avant écriture pour réduire le risque d'extraction triviale. Important : cette obfuscation n'est pas du chiffrement fort. Les messages que vous envoyez transitent par OpenRouter et par le fournisseur du modèle choisi selon leurs politiques respectives."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Quelle est la différence entre PolyChat AI et ChatGPT ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "ChatGPT propose uniquement les modèles d'OpenAI dans une interface propriétaire et payante (ChatGPT Plus à 20 $/mois pour GPT-4). PolyChat AI est une interface open source qui agrège 100+ modèles de différents fournisseurs (OpenAI, Anthropic, Google, Meta, Mistral…) en paiement à l'usage via OpenRouter, avec la possibilité de comparer 3 modèles en parallèle sur la même question."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- Theme-flash prevention (DO NOT REMOVE — see AGENTS.md)        -->
+    <!-- Reads polychat-settings before paint to avoid theme flicker    -->
+    <!-- ============================================================ -->
     <script>
-      // Prevent theme flash: apply stored theme before render
       try {
         const stored = JSON.parse(localStorage.getItem('polychat-settings') || '{}');
         const theme = stored?.state?.theme || 'dark';
         document.documentElement.setAttribute('data-theme', theme);
+        const legal = JSON.parse(localStorage.getItem('polychat-legal') || '{}');
+        const fontsConsent = legal?.state?.fontsConsent === true;
+        document.documentElement.setAttribute('data-fonts', fontsConsent ? 'web' : 'system');
       } catch (e) {
         document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-fonts', 'system');
       }
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- ============================================================ -->
+      <!-- SEO / GEO fallback content for crawlers and AI bots           -->
+      <!-- (Rendered before React hydrates, replaced after JS loads)     -->
+      <!-- ============================================================ -->
+      <noscript>
+        <style>
+          .polychat-fallback{font-family:Georgia,'Times New Roman',serif;max-width:720px;margin:3rem auto;padding:0 1.5rem;color:#14110d;background:#f1ebdc;line-height:1.6}
+          .polychat-fallback h1{font-size:2.25rem;margin:0 0 .5rem;letter-spacing:-.02em}
+          .polychat-fallback h2{font-size:1.5rem;margin:2rem 0 .5rem;border-bottom:1px solid rgba(20,17,13,.15);padding-bottom:.25rem}
+          .polychat-fallback p{margin:.5rem 0}
+          .polychat-fallback ul{padding-left:1.25rem}
+          .polychat-fallback a{color:#7a1f1f}
+        </style>
+        <main class="polychat-fallback">
+          <h1>PolyChat AI — Chat avec 100+ modèles d'IA</h1>
+          <p>
+            <strong>PolyChat AI</strong> est une interface web open source qui rassemble
+            <strong>plus de 100 modèles d'intelligence artificielle</strong> — GPT-4, Claude 3.5,
+            Gemini 1.5, Llama 3, Mistral — dans une seule application, via l'API
+            <a href="https://openrouter.ai">OpenRouter</a>. Comparez jusqu'à
+            <strong>3 modèles en parallèle</strong> sur la même question, en streaming temps réel.
+          </p>
+          <p>
+            Cette application nécessite JavaScript pour fonctionner. Activez JavaScript dans votre
+            navigateur ou consultez le code source sur
+            <a href="https://github.com/Teeflo/PolyChat-AI">GitHub</a>.
+          </p>
+
+          <h2>Fonctionnalités principales</h2>
+          <ul>
+            <li>Accès à 100+ modèles d'IA (OpenAI, Anthropic, Google, Meta, Mistral, DeepSeek)</li>
+            <li>Comparaison de 3 modèles en parallèle dans une seule session</li>
+            <li>Streaming des réponses en temps réel</li>
+            <li>4 thèmes visuels : sombre, clair, pixel art, hacker</li>
+            <li>Historique 100 % local (localStorage), aucun serveur tiers</li>
+            <li>Open source, licence MIT, gratuit</li>
+          </ul>
+
+          <h2>Questions fréquentes</h2>
+          <h3>Qu'est-ce que PolyChat AI ?</h3>
+          <p>
+            Une interface web open source construite avec React 19 et TypeScript qui permet d'utiliser
+            plus de 100 LLM via une seule application, sans inscription.
+          </p>
+          <h3>PolyChat AI est-il gratuit ?</h3>
+          <p>
+            Oui. L'application est gratuite et open source (MIT). Seul l'usage des modèles est facturé
+            par OpenRouter selon ses tarifs (à partir de 0 € pour certains modèles open source).
+          </p>
+          <h3>Mes données sont-elles privées ?</h3>
+          <p>
+            L'historique et la clé API sont stockés uniquement dans le localStorage de votre navigateur.
+            Aucune donnée n'est envoyée à un serveur PolyChat AI.
+          </p>
+        </main>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { X, Sun, Moon, Trash2, AlertTriangle } from 'lucide-react';
+import { X, Sun, Moon, Trash2, AlertTriangle, Shield } from 'lucide-react';
 import { useSettings } from '../hooks/useSettings';
 import type { Model } from '../types/index';
 
@@ -7,6 +7,7 @@ interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   models: Model[];
+  onOpenPrivacy?: () => void;
 }
 
 function getTokenLabel(tokens: number): string {
@@ -17,7 +18,7 @@ function getTokenLabel(tokens: number): string {
   return 'Très long';
 }
 
-export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
+export function SettingsModal({ isOpen, onClose, models, onOpenPrivacy }: SettingsModalProps) {
   const {
     apiKey,
     setApiKey,
@@ -116,7 +117,7 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
       >
         <div className="modal-header">
           <div>
-            <span className="modal-eyebrow">№ 002 — Paramètres</span>
+             <span className="modal-eyebrow">Paramètres</span>
             <h2 id={titleId} className="modal-title">
               Régler <em>la presse.</em>
             </h2>
@@ -327,6 +328,21 @@ export function SettingsModal({ isOpen, onClose, models }: SettingsModalProps) {
               </button>
             )}
           </div>
+
+          {/* Legal & Privacy */}
+          {onOpenPrivacy && (
+            <div className="form-group">
+              <span className="form-label">Confidentialité</span>
+              <button
+                type="button"
+                className="form-input form-button"
+                onClick={onOpenPrivacy}
+              >
+                <Shield size={16} aria-hidden="true" />
+                Confidentialité, export, suppression, consentements
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

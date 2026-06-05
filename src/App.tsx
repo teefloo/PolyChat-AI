@@ -3,12 +3,18 @@ import { Agentation } from 'agentation';
 import type { Message, Model } from './types/index';
 import { useSettings } from './hooks/useSettings';
 import { useChatStore } from './hooks/useChatStore';
+import { useLegal } from './hooks/useLegal';
 import { streamAIResponse, fetchModels } from './services/openRouter';
+import { initFontsConsent, applyFontsConsent } from './services/fontLoader';
 import { Sidebar } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
 import { ChatColumn } from './components/ChatColumn';
 import { ChatInput } from './components/ChatInput';
 import { SettingsModal } from './components/SettingsModal';
+import { LegalModal } from './components/LegalModal';
+import { ConsentGate } from './components/ConsentGate';
+import { PrivacyModal } from './components/PrivacyModal';
+import { LEGAL_DOCUMENTS, type LegalDocument } from './legal/documents';
 
 function formatIssueDate(d: Date) {
   return d
@@ -36,21 +42,20 @@ function AppContent() {
 
   const [models, setModels] = useState<Model[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [legalDocId, setLegalDocId] = useState<LegalDocument['id'] | null>(null);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const abortRefs = useRef(new Map<string, AbortController>());
 
-  const today = useMemo(() => new Date(), []);
-  const issueDate = useMemo(() => formatIssueDate(today), [today]);
-  const issueNumber = useMemo(() => {
-    const start = new Date(today.getFullYear(), 0, 0);
-    const diff = today.getTime() - start.getTime();
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
-    return String(dayOfYear).padStart(3, '0');
-  }, [today]);
+   const today = useMemo(() => new Date(), []);
+   const issueDate = useMemo(() => formatIssueDate(today), [today]);
 
   const activeSession = activeSessionId
     ? sessions.find((s) => s.id === activeSessionId)
     : undefined;
+
+  useEffect(() => {
+    initFontsConsent();
+  }, []);
 
   useEffect(() => {
     if (!apiKey) {
@@ -279,22 +284,22 @@ function AppContent() {
           onRenameSession={renameSession}
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
+          onOpenLegal={setLegalDocId}
+          onOpenPrivacy={() => setIsPrivacyOpen(true)}
         />
         <div className="main" id="main-content" role="main">
-          <TopBar
-            onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-            onSettings={toggleSettings}
-            isSidebarOpen={isSidebarOpen}
-            activeSessionTitle={activeSession?.title}
-            issueDate={issueDate}
-            issueNumber={issueNumber}
-          />
+           <TopBar
+             onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+             onSettings={toggleSettings}
+             isSidebarOpen={isSidebarOpen}
+             activeSessionTitle={activeSession?.title}
+             issueDate={issueDate}
+           />
           <section className="empty-state" aria-label="Bienvenue sur PolyChat">
             <div className="empty-state-left">
-              <div className="empty-state-issue">
-                <span>№ {issueNumber}</span>
-                <span>{issueDate}</span>
-              </div>
+             <div className="empty-state-issue">
+               <span>{issueDate}</span>
+             </div>
               <h1 className="empty-state-headline">
                 Converser <em>avec</em><br />l'intelligence.
               </h1>
@@ -334,7 +339,28 @@ function AppContent() {
             </div>
           </section>
         </div>
-        <SettingsModal isOpen={isSettingsOpen} onClose={toggleSettings} models={models} />
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={toggleSettings}
+          models={models}
+          onOpenPrivacy={() => {
+            toggleSettings();
+            setIsPrivacyOpen(true);
+          }}
+        />
+        <LegalModal
+          isOpen={legalDocId !== null}
+          onClose={() => setLegalDocId(null)}
+          document={legalDocId ? LEGAL_DOCUMENTS[legalDocId] : LEGAL_DOCUMENTS.privacy}
+        />
+        <PrivacyModal
+          isOpen={isPrivacyOpen}
+          onClose={() => setIsPrivacyOpen(false)}
+          onOpenLegal={(id) => {
+            setIsPrivacyOpen(false);
+            setLegalDocId(id);
+          }}
+        />
         <div className="paper-grain" aria-hidden="true" />
       </div>
     );
@@ -368,16 +394,17 @@ function AppContent() {
         onRenameSession={renameSession}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        onOpenLegal={setLegalDocId}
+        onOpenPrivacy={() => setIsPrivacyOpen(true)}
       />
       <div className="main" id="main-content" role="main">
-        <TopBar
-          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          onSettings={toggleSettings}
-          isSidebarOpen={isSidebarOpen}
-          activeSessionTitle={activeSession?.title}
-          issueDate={issueDate}
-          issueNumber={issueNumber}
-        />
+         <TopBar
+           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+           onSettings={toggleSettings}
+           isSidebarOpen={isSidebarOpen}
+           activeSessionTitle={activeSession?.title}
+           issueDate={issueDate}
+         />
         <div className="window-bar" role="toolbar" aria-label="Fenêtres de la page active">
           <span className="window-bar-label" id="window-bar-label">Composition</span>
           <div className="window-bar-group" role="group" aria-labelledby="window-bar-label">
@@ -404,10 +431,38 @@ function AppContent() {
             Nouvelle conversation
           </button>
         </div>
+        {visibleWindows.length > 1 && (
+          <div className="column-switcher" role="tablist" aria-label="Sélectionner la fenêtre active">
+            <span className="column-switcher-label" id="column-switcher-label">
+              Fenêtre
+            </span>
+            <div
+              className="column-switcher-tabs"
+              role="group"
+              aria-labelledby="column-switcher-label"
+            >
+              {visibleWindows.map((win, i) => (
+                <button
+                  key={win.id}
+                  type="button"
+                  role="tab"
+                  className="column-switcher-tab"
+                  aria-selected={focusedWindowId === win.id}
+                  aria-controls={`column-${win.id}`}
+                  aria-label={`Afficher la fenêtre ${i + 1}`}
+                  onClick={() => setFocusedWindowId(win.id)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="chat-columns">
           {visibleWindows.map((win, i) => (
             <ChatColumn
               key={win.id}
+              id={`column-${win.id}`}
               window={win}
               windowIndex={i}
               isFocused={focusedWindowId === win.id}
@@ -445,16 +500,59 @@ function AppContent() {
           </div>
         )}
       </div>
-      <SettingsModal isOpen={isSettingsOpen} onClose={toggleSettings} models={models} />
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={toggleSettings}
+        models={models}
+        onOpenPrivacy={() => {
+          toggleSettings();
+          setIsPrivacyOpen(true);
+        }}
+      />
+      <LegalModal
+        isOpen={legalDocId !== null}
+        onClose={() => setLegalDocId(null)}
+        document={legalDocId ? LEGAL_DOCUMENTS[legalDocId] : LEGAL_DOCUMENTS.privacy}
+      />
+      <PrivacyModal
+        isOpen={isPrivacyOpen}
+        onClose={() => setIsPrivacyOpen(false)}
+        onOpenLegal={(id) => {
+          setIsPrivacyOpen(false);
+          setLegalDocId(id);
+        }}
+      />
       <div className="paper-grain" aria-hidden="true" />
     </div>
   );
 }
 
 function App() {
+  const legalAccepted = useLegal((s) => s.legalAccepted);
+  const acceptLegal = useLegal((s) => s.acceptLegal);
+  const setFontsConsent = useLegal((s) => s.setFontsConsent);
+  const [gateDocId, setGateDocId] = useState<LegalDocument['id'] | null>(null);
+
+  const gateDoc = gateDocId ? LEGAL_DOCUMENTS[gateDocId] : null;
+
   return (
     <>
       <AppContent />
+      {!legalAccepted && (
+        <ConsentGate
+          onOpenDocument={(id) => setGateDocId(id)}
+          onAccept={() => {
+            acceptLegal();
+            setFontsConsent(false);
+            applyFontsConsent(false);
+          }}
+        />
+      )}
+      <LegalModal
+        isOpen={gateDoc !== null}
+        onClose={() => setGateDocId(null)}
+        document={gateDoc ?? LEGAL_DOCUMENTS.privacy}
+      />
       {import.meta.env.DEV && <Agentation />}
     </>
   );

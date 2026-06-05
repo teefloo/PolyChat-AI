@@ -6,6 +6,7 @@ import { ChatInput } from './ChatInput';
 import type { Model, PageWindow } from '../types/index';
 
 interface ChatColumnProps {
+  id?: string;
   window: PageWindow | undefined;
   windowIndex: number;
   isFocused: boolean;
@@ -23,6 +24,7 @@ interface ChatColumnProps {
 }
 
 export function ChatColumn({
+  id,
   window,
   windowIndex,
   isFocused,
@@ -59,7 +61,7 @@ export function ChatColumn({
 
   if (!window) {
     return (
-      <div className={`chat-column${isFocused ? ' focused' : ''}`}>
+      <div id={id} className={`chat-column${isFocused ? ' focused' : ''}`}>
         <div className="messages-empty">
           <div className="messages-empty-title">Aucune fenêtre</div>
         </div>
@@ -70,6 +72,7 @@ export function ChatColumn({
   if (!window.modelId) {
     return (
       <section
+        id={id}
         className={`chat-column${isFocused ? ' focused' : ''}`}
         onClick={onFocus}
         aria-label={`Fenêtre ${windowIndex + 1}, aucun modèle sélectionné`}
@@ -119,6 +122,7 @@ export function ChatColumn({
 
   return (
     <section
+      id={id}
       className={`chat-column${isFocused ? ' focused' : ''}`}
       onClick={onFocus}
       aria-label={`Fenêtre ${windowIndex + 1} avec ${window.modelName || 'modèle'}`}
