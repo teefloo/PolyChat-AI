@@ -21,6 +21,10 @@
 
 </div>
 
+<!-- README-I18N:START -->
+**Read this in other languages:** [**English**](README.md) · [Français](README.fr.md) · [Español](README.es.md) · [Deutsch](README.de.md) · [Italiano](README.it.md) · [Português](README.pt.md) · [汉语](README.zh.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Русский](README.ru.md)
+<!-- README-I18N:END -->
+
 ---
 
 > **Converser avec l'intelligence.** A quiet, editorial interface for interrogating several language models in parallel, comparing their voices, and composing the right answer.
