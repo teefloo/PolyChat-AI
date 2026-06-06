@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200" width="160" height="200" role="img" aria-labelledby="pc3-v-title">
-  <title id="pc3-v-title">PolyChat</title>
-  <text x="80" y="120" font-family="'Fraunces', 'Iowan Old Style', 'Times New Roman', serif" font-size="104" font-style="italic" font-weight="500" font-variation-settings="'opsz' 144, 'SOFT' 80" fill="#14110d" text-anchor="middle">§</text>
-  <line x1="40" y1="132" x2="120" y2="132" stroke="#7a1f1f" stroke-width="2"/>
-  <text x="80" y="170" font-family="'Fraunces', 'Iowan Old Style', 'Times New Roman', serif" font-size="30" font-weight="500" font-variation-settings="'opsz' 144, 'SOFT' 30" fill="#14110d" text-anchor="middle" letter-spacing="-1.0">PolyChat</text>
-  <line x1="40" y1="180" x2="120" y2="180" stroke="#14110d" stroke-width="0.5" opacity="0.14"/>
-  <text x="80" y="194" font-family="'JetBrains Mono', 'IBM Plex Mono', monospace" font-size="9" font-weight="500" fill="#9a9081" text-anchor="middle" letter-spacing="2.0">№&nbsp;AI</text>
-</svg>

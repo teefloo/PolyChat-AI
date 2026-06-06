@@ -141,3 +141,6 @@ CLAUDE.md
 CLAUDE*.md
 
 .vercel
+
+# Skill / build output
+output/
