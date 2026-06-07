@@ -1,5 +1,4 @@
 <!-- prettier-ignore -->
-<!-- README-I18N:START -->
 <div align="center">
 
 <img src="public/logos/polychat-logo-concept1-horizontal.svg" alt="PolyChat AI" width="320" />
@@ -22,7 +21,9 @@
 
 </div>
 
+<!-- README-I18N:START -->
 [English](./README.md) · [Français](./README.fr.md) · [Español](./README.es.md) · [Deutsch](./README.de.md) · [Italiano](./README.it.md) · [Português](./README.pt.md) · [汉语](./README.zh.md) · **日本語** · [한국어](./README.ko.md) · [Русский](./README.ru.md)
+<!-- README-I18N:END -->
 
 ---
 
@@ -180,4 +181,3 @@ src/
 <div align="center">
 <sub>デジタル用紙に組まれた — セリフ Fraunces · グロテスク IBM Plex · モノスペース JetBrains</sub>
 </div>
-<!-- README-I18N:END -->

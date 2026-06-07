@@ -22,9 +22,7 @@
 </div>
 
 <!-- README-I18N:START -->
-
 [English](./README.md) · **Français** · [Español](./README.es.md) · [Deutsch](./README.de.md) · [Italiano](./README.it.md) · [Português](./README.pt.md) · [汉语](./README.zh.md) · [日本語](./README.ja.md) · [한국어](./README.ko.md) · [Русский](./README.ru.md)
-
 <!-- README-I18N:END -->
 
 ---
