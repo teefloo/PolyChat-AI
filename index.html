@@ -83,14 +83,11 @@
     <meta name="distribution" content="global" />
     <meta name="HandheldFriendly" content="true" />
 
-    <!-- ============================================================ -->
-    <!-- PERFORMANCE: preconnect / dns-prefetch                        -->
-    <!-- (OpenRouter API — see AGENTS.md)                               -->
-    <!-- Google Fonts are NOT preconnected: they are loaded only after  -->
-    <!-- explicit user consent (RGPD / CNIL). See fontLoader.ts.        -->
-    <!-- ============================================================ -->
-    <link rel="dns-prefetch" href="https://openrouter.ai" />
-    <link rel="preconnect" href="https://openrouter.ai" crossorigin />
+    <!-- OpenRouter preconnect is injected at runtime by                -->
+    <!-- services/openRouter.ts (injectOpenRouterPreconnect) once the  -->
+    <!-- React tree mounts — every chat path uses the API anyway, so   -->
+    <!-- paying the DNS/TLS handshake up front removes it from the     -->
+    <!-- critical path of the first request. -->
 
     <!-- ============================================================ -->
     <!-- JSON-LD STRUCTURED DATA (Schema.org)                          -->

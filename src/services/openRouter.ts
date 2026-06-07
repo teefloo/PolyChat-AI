@@ -2,6 +2,32 @@ import type { Message, Model } from '../types/index';
 
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODELS_URL = 'https://openrouter.ai/api/v1/models';
+const ORIGIN = 'https://openrouter.ai';
+
+let preconnectInjected = false;
+
+export function injectOpenRouterPreconnect(): void {
+  if (preconnectInjected) return;
+  if (typeof document === 'undefined') return;
+
+  const head = document.head;
+  if (!head.querySelector(`link[rel="preconnect"][href="${ORIGIN}"]`)) {
+    const preconnect = document.createElement('link');
+    preconnect.rel = 'preconnect';
+    preconnect.href = ORIGIN;
+    preconnect.crossOrigin = 'anonymous';
+    head.appendChild(preconnect);
+  }
+
+  if (!head.querySelector(`link[rel="dns-prefetch"][href="${ORIGIN}"]`)) {
+    const dnsPrefetch = document.createElement('link');
+    dnsPrefetch.rel = 'dns-prefetch';
+    dnsPrefetch.href = ORIGIN;
+    head.appendChild(dnsPrefetch);
+  }
+
+  preconnectInjected = true;
+}
 
 type ApiMessage = { role: string; content: string };
 

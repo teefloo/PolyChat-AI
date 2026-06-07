@@ -4,7 +4,7 @@ import type { Message, Model } from './types/index';
 import { useSettings } from './hooks/useSettings';
 import { useChatStore } from './hooks/useChatStore';
 import { useLegal } from './hooks/useLegal';
-import { streamAIResponse, fetchModels } from './services/openRouter';
+import { streamAIResponse, fetchModels, injectOpenRouterPreconnect } from './services/openRouter';
 import { initFontsConsent, applyFontsConsent } from './services/fontLoader';
 import { Sidebar } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
@@ -57,6 +57,7 @@ function AppContent() {
 
   useEffect(() => {
     initFontsConsent();
+    injectOpenRouterPreconnect();
   }, []);
 
   useEffect(() => {
