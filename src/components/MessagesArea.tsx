@@ -1,8 +1,8 @@
 import { useRef, useEffect, useMemo, useState, useCallback } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { Bot, User, Trash2, RotateCcw, AlertCircle, RefreshCw, ArrowDown } from 'lucide-react';
 import type { Message } from '../types/index';
+import { MarkdownMessage } from './MarkdownMessage';
+import { preloadMarkdown } from './markdownPreload';
 
 interface MessagesAreaProps {
   messages: Message[];
@@ -18,6 +18,10 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
   const wasAtBottom = useRef(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
+  useEffect(() => {
+    preloadMarkdown();
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -111,7 +115,7 @@ export function MessagesArea({ messages, isLoading, error, onDeleteMessage, onRe
             aria-live={isLoading && i === lastAssistantIndex ? 'polite' : 'off'}
           >
             {msg.role === 'assistant' ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+              <MarkdownMessage content={msg.content} />
             ) : (
               msg.content
             )}
