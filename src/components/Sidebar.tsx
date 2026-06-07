@@ -115,7 +115,7 @@ export function Sidebar({
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
            <div className="sidebar-brand">
-             <img src="/logos/polychat-logo-concept1-icon.svg" alt="" className="sidebar-brand-icon" />
+             <img src="/logos/polychat-logo-concept1-icon.svg" alt="" width="22" height="22" className="sidebar-brand-icon" />
              <span className="sidebar-brand-name">PolyChat</span>
            </div>
           <div className="sidebar-search">

@@ -38,6 +38,8 @@ export function TopBar({
               src="/logos/polychat-logo-concept1-icon.svg"
               alt=""
               aria-hidden="true"
+              width="22"
+              height="22"
               className="topbar-logo"
             />
             <span className="topbar-title">PolyChat</span>
